@@ -1,0 +1,93 @@
+.main-container {
+  padding: 10px; /* Apply padding of 20 pixels inside the container */
+  display: flex;
+
+  width: 99%;
+  height: 98%;
+  position:fixed;
+  box-sizing: border-box;
+}
+
+.stack-setup {
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  height: 100%; /* Fixed height for the container */
+  width: 100%;
+}
+
+.stack{
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  flex-wrap: wrap; /* Wrap items into multiple rows */
+  height: 100%;
+  width: 100%;
+}
+
+.stack0 {
+  background-color: #76b852; /* Background color */
+}
+
+.stack1 {
+  flex: 10%; /* 20% width */
+  background-color: #76b852; /* Background color */
+}
+
+.stack2 {
+  flex: 20%; /* 40% width */
+  background-color: #007bff; /* Background color */
+}
+
+.stack3 {
+  flex: 30%; /* 40% width */
+  background-color: #ff5733; /* Background color */
+}
+
+.stack4 {
+  flex: 40%; /* 40% width */
+  background-color: #ff5733; /* Background color */
+}
+
+.stack5 {
+  flex: 50%; /* 40% width */
+  background-color: #ff5733; /* Background color */
+  height: 100%;
+}
+
+.box{
+  display: flex;
+}
+
+.box20{
+  flex: 1;
+}
+.box80{
+  flex: 4;
+}
+
+.box-7-8{
+  flex: 7;
+}
+.box-1-8{
+  flex: 1;
+}
+
+.c20 {
+  flex: 1; /* Takes up 1 part of the available space */
+  /*background-color: lightblue; /* Just for visualization */
+  padding: 5px;
+}
+
+.c80 {
+  flex: 4; /* Takes up 4 parts of the available space */
+  /*background-color: lightgreen; /* Just for visualization */
+}
+
+.border-x1 {
+  border: 1px solid black;
+}
+
+.border-x2 {
+  border: 2px solid black;
+}
+
+

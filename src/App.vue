@@ -1,22 +1,21 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <!-- Don't Need The Nav Bar Yet -->
+  <!--
+  <nav class="nav-bar-grid-layout">
+    <div>
+      <router-link to="/about">World </router-link> |
+      <router-link to="/"> World </router-link>
+    </div>
   </nav>
+  -->
   <router-view/>
 </template>
 
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
 nav {
-  padding: 30px;
+  padding: 0px;
 
   a {
     font-weight: bold;
@@ -27,4 +26,11 @@ nav {
     }
   }
 }
+
+.nav-bar-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  align-items: left; /* Vertically center content */
+}
+
 </style>

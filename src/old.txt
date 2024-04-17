@@ -1,0 +1,11 @@
+			<nav class="nav-bar-grid-layout">
+				<div></div>
+				<div class="left-aligned fixed-width-and-scroll">
+					<div class ="scroll-content">
+						<button class="entity-button" v-for="item in entityNames" :key="item">
+						{{ item }}
+						</button>
+					</div>
+				</div>
+			</nav>
+
