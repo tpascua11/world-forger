@@ -27,6 +27,12 @@ body {
   font-weight: bold;
 }
 
+.title3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
 
 /* Fixes */
 .fit-width{
@@ -46,4 +52,5 @@ body {
   align-items: center;
   margin-right: 10px; /* Adjust margin as needed */
 }
+
 

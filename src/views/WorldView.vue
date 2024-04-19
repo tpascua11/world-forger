@@ -36,11 +36,13 @@
 
 						</VueMultiselect>
 					</div>
-					<div class="box-1-8 border-x1">
-						<i class="ra ra-repair ra-2x"></i>
+					<div class="box-1-8 border-x1 entity-box">
+						<div class="entity-icon" @click="changeViewMode('ATTRIBUTE_CONFIGURATION');">
+							<i class="ra ra-repair ra-2x"></i>
+						</div>
 					</div>
 				</div>
-				<div class="stack stack5">
+				<div class="stack stack3 stack-overflow">
 					<div class="lined-paper">
 							<div v-for="(name, index) in listOfNames" :key="index" class="name-box">
 									<span class="index">{{ index + 1 }}. </span>
@@ -49,27 +51,18 @@
 					</div>
 				</div>
 				<div class="name-box">
-					<button class="blue-button fit-width">Add {{selectedEntity}}</button>
+					<button class="green-button fit-width">Add {{selectedEntity}}</button>
 				</div>
 			</div>
 		</div>
 
-		<div class="c80 border-x2">
-			<div class="stack-setup">
-				<div class="">
-				Stack 1
-						<input type="text" placeholder="User Input">
-				</div>
-				<div class="stack stack2">Stack 2</div>
-				<div class="stack stack3">Stack 3</div>
-			</div>
-
-			<!--
-			<div @click="openArributeModal();">
-				Test
-			</div>
-			-->
+		<div v-if="showView === 'ATTRIBUTE_CONFIGURATION'" class="c80 border-x2">
+			<AttributeConfiguration />
 		</div>
+		<div v-else class="c80 border-x2">
+
+		</div>
+
 		<Attribute :visible="AttributeModalVisible" @close="closeAttributeModal"/>
 	</div>
 </template>
@@ -77,12 +70,14 @@
 <script>
 import VueMultiselect from 'vue-multiselect'
 import Attribute from '@/bigComponents/Attribute.vue'
+import AttributeConfiguration from '@/components/AttributeConfiguration.vue'
 
 export default {
 	name: 'WorldView',
 	components: {
 		VueMultiselect,
 		Attribute,
+		AttributeConfiguration,
 	},
 	data: function() {
 		return {
@@ -98,6 +93,7 @@ export default {
 				'Apple', 'Banna', 'Carrots', 'Meats', 'Flowers', 'Power', 'Tacos 3000',
 				'Apple', 'Banna', 'Carrots', 'Meats', 'Flowers', 'Power', 'Tacos 3000',
 				'Apple', 'Banna', 'Carrots', 'Meats', 'Flowers', 'Power', 'Tacos 3000',
+				'Apple', 'Banna', 'Carrots', 'Meats', 'Flowers', 'Power', 'Tacos 3000',
 			],
 			newPropertyName: '',
 			propertyNames: {} ,
@@ -105,6 +101,8 @@ export default {
 			selectedEntity: null,
 			test: '',
 			AttributeModalVisible: false,
+			showView: '',
+			//showView: 'ATTRIBUTE_CONFIGURATION',
 		}
 	},
 	methods: {
@@ -139,6 +137,10 @@ export default {
 			//inputElement.style.fontSize = '36px'; // Change the font size as needed
 			inputElement.classList.add('title4');
 		},
+		changeViewMode(view){
+			console.log("WHAT IS VIEW", view);
+			this.showView = view;
+		}
 	},
 	computed:{
 		entityNames() {
@@ -255,7 +257,11 @@ export default {
 .index {
   font-weight: bold;
 	text-align: right;
-  flex: 1;
+	flex: 1;
+
+	/* font-family: "Times New Roman", Times, serif; */
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
 }
 
 .name {
@@ -267,7 +273,7 @@ export default {
   background-color: #fff;
   padding: 5px;
   border: 1px solid #000;
-  height: 90%; /* Fixed height */
+	height: 100%; /* Fixed height */
   overflow-y: auto; /* Enable vertical scrollbar */
 }
 
@@ -276,12 +282,33 @@ export default {
   height: 0; /* Remove scrollbar height */
 }
 
+.lined-paper-index{
+}
+
 .user-input {
   border-top: 1px solid #000; /* Add border on top to separate from existing content */
   padding: 10px;
   display: flex;
   align-items: center;
 }
+
+
+.entity-box {
+}
+
+.entity-box:hover {
+	display: block;
+	cursor: pointer;
+	background-color: pink;
+}
+
+
+.entity-icon {
+	margin-top: 5px;
+}
+
+
+
 
 </style>
 

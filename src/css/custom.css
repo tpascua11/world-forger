@@ -1,0 +1,13 @@
+.attribute-layout .multiselect__option {
+  /*border: 1px solid black;*/
+}
+
+.attribute-layout {
+}
+
+.attribute-layout .multiselect__content {
+  background-color: lightblue;
+  border: 1px solid black;
+  border-radius: 4px;
+
+}

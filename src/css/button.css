@@ -1,22 +1,4 @@
-/* Buttons */
-.blue-button {
-  background-color: #007bff; /* Blue color */
-  color: white; /* Text color */
-  padding: 10px 20px; /* Padding for the button */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Cursor style */
-  text-align: center; /* Center the text */
-  text-decoration: none; /* Remove default link decoration */
-  display: inline-block; /* Make it behave as a block element */
-}
-
-/* Hover effect */
-.blue-button:hover {
-  background-color: #0056b3; /* Darker shade of blue */
-}
-
-.blue-button {
+.green-button {
 	font-family: "Neucha";
 	font-size: 17px;
   background-color: #04AA6D; /* Blue color */
@@ -31,8 +13,29 @@
 }
 
 /* Hover effect */
-.blue-button:hover {
+.green-button:hover {
 	font-family: "Neucha";
   font-weight: bold;
   background-color: #029c63; /* Darker shade of blue */
+}
+
+.blue-button {
+	font-family: "Neucha";
+	font-size: 17px;
+  background-color: #7CB9E8; /* Blue color */
+  color: white; /* Text color */
+  padding: 10px 20px; /* Padding for the button */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Cursor style */
+  text-align: center; /* Center the text */
+  text-decoration: none; /* Remove default link decoration */
+  display: inline-block; /* Make it behave as a block element */
+}
+
+/* Hover effect */
+.blue-button:hover {
+	font-family: "Neucha";
+  font-weight: bold;
+  background-color: #6CB4EE; /* Darker shade of blue */
 }

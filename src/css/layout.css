@@ -4,7 +4,26 @@
 
   width: 99%;
   height: 98%;
+
   position:fixed;
+  box-sizing: border-box;
+}
+
+.top-row {
+  flex: 1; /* This makes the top row grow to fill the available space */
+}
+
+.bottom-row {
+  display: flex;
+  flex: 1; /* This makes the bottom row grow to fill the available space */
+}
+
+.fixed-container {
+  position:fixed;
+}
+
+.base-format {
+  padding: 10px; /* Apply padding of 20 pixels inside the container */
   box-sizing: border-box;
 }
 
@@ -24,33 +43,66 @@
 }
 
 .stack0 {
-  background-color: #76b852; /* Background color */
+  /*background-color: #76b852; /* Background color */
+}
+
+.stack05 {
+  flex: 5%; /* 20% width */
+  /*background-color: #76b852; /* Background color */
 }
 
 .stack1 {
   flex: 10%; /* 20% width */
-  background-color: #76b852; /* Background color */
+  /*background-color: #76b852; /* Background color */
 }
 
 .stack2 {
   flex: 20%; /* 40% width */
-  background-color: #007bff; /* Background color */
+  /*background-color: #007bff; /* Background color */
+}
+
+.height100{
+	height: 100%; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.heightFixed{
+  background-color: gold; /* Background color */
+	height: 50px;; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.stack-overflow {
+	height: 100%; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
 }
 
 .stack3 {
   flex: 30%; /* 40% width */
-  background-color: #ff5733; /* Background color */
+  /*background-color: #ff5733; /* Background color */
 }
 
 .stack4 {
   flex: 40%; /* 40% width */
-  background-color: #ff5733; /* Background color */
+  /*background-color: #ff5733; /* Background color */
 }
 
 .stack5 {
   flex: 50%; /* 40% width */
+}
+
+.stack7 {
+  flex: 70%; /* 40% width */
+}
+
+.stack8 {
+  flex: 80%; /* 40% width */
   background-color: #ff5733; /* Background color */
-  height: 100%;
+}
+
+.stack9 {
+  flex: 90%; /* 40% width */
+  background-color: #ff5733; /* Background color */
 }
 
 .box{
@@ -89,5 +141,10 @@
 .border-x2 {
   border: 2px solid black;
 }
+
+.border-top-x2 {
+  border-top: 2px solid #000; /* Adjust thickness and color as needed */
+}
+
 
 
