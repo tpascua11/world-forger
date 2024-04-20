@@ -7,5 +7,6 @@ import '@/css/button.css'
 import '@/css/layout.css'
 import '@/css/custom.css'
 
-createApp(App).use(store).use(router).mount('#app')
 
+const mainApp = createApp(App).use(store).use(router).mount('#app')
+console.log("mainAPp", mainApp);

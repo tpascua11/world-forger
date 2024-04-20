@@ -7,15 +7,43 @@
 
   position:fixed;
   box-sizing: border-box;
+
+  /*flex-direction: column;*/
 }
 
+.main-container-start-col {
+  padding: 10px; /* Apply padding of 20 pixels inside the container */
+  display: flex;
+
+  width: 99%;
+  height: 98%;
+
+  position:fixed;
+  box-sizing: border-box;
+
+  flex-direction: column;
+}
+
+
 .top-row {
-  flex: 1; /* This makes the top row grow to fill the available space */
+  flex: 1 0 25px;
 }
 
 .bottom-row {
   display: flex;
-  flex: 1; /* This makes the bottom row grow to fill the available space */
+
+  box-sizing: content-box;
+  height: 95%;
+
+
+}
+
+.cool {
+
+  border-top: 2px solid black; /* Border for the top side */
+  border-left: 2px solid black; /* Border for the left side */
+  border-right: 2px solid black; /* Border for the right side */
+  border-bottom: none; /* No border for the bottom side */
 }
 
 .fixed-container {
@@ -32,6 +60,9 @@
   flex-direction: column; /* Arrange items vertically */
   height: 100%; /* Fixed height for the container */
   width: 100%;
+
+
+  box-sizing: border-box;
 }
 
 .stack{
@@ -40,6 +71,9 @@
   flex-wrap: wrap; /* Wrap items into multiple rows */
   height: 100%;
   width: 100%;
+
+
+  box-sizing: border-box;
 }
 
 .stack0 {

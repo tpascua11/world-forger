@@ -11,7 +11,25 @@
   <router-view/>
 </template>
 
+<script>
+  export default {
+    name: 'App',
+    created() {
+      // Define $root variable
+      this.$root.exampleVariable = 'Hello, I am $root variable!';
+      this.$root.exampleMethod = () => {
+        console.log('This is a method of $root');
+      };
+      //Entity Template Stores Changes to Entity Attributes
+      //For the Real Word Entity Attributes, Resets after it pass through
+      this.$root.entityTemplate = {};
+    }
+};
+
+</script>
+
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
+
 <style lang="scss">
 
 nav {

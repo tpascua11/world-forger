@@ -39,3 +39,11 @@
   font-weight: bold;
   background-color: #6CB4EE; /* Darker shade of blue */
 }
+
+.is-selected {
+	background-color: #dcf2d4;
+}
+
+.is-selected:hover {
+	background-color: #bce6ad !important;
+}

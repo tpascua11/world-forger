@@ -1,23 +1,35 @@
 <template>
   <div class="stack-setup">
-    <div class="stack stack7 trueHeight">
+
+    <div class="stack stack1 border-top-x1">
+      <div class="base-format">
+        <h2> Attribute Configuration </h2>
+        <div class="button-container">
+          <input type="text" v-model="inputValue" class="custom-input">
+          <button class="blue-button fit-width" @click="add">
+            Add
+          </button>
+          <button class="blue-button fit-width"> Save </button>
+        </div>
+      </div>
+    </div>
+    <div class="stack stack7 trueHeight" v-if="entityPropertiesLength">
       <div class="trueHeight">
         <table>
           <thead>
             <tr class="border-x1">
-              <th class="name">Attribute </th>
+              <th class="name">Attribute {{entity}}</th>
               <th class="type">Type</th>
               <th class="link">Link Reference To</th>
               <th class="listType">List Type</th>
             </tr>
-
           </thead>
           <tbody class="">
-            <tr v-for="row in attributeTemplate" :key="row.id">
-              <td>{{ row['Name'] }}</td>
+            <tr v-for="row in entityProperties" :key="row.id">
+              <td>{{row}}</td>
               <td>
                 <VueMultiselect
-                    v-model="attributeTest"
+                    v-model="template[row]['type']"
                     :options="attributeTypeList"
                     placeholder="Change Data Type..."
 										:show-labels="false"
@@ -38,21 +50,17 @@
                     </template>
                 </VueMultiselect>
               </td>
-              <td>{{ row['Link Reference To']}}</td>
-              <td>{{ row['List Type']}}</td>
+              <td>{{ template[row]['Link Reference To'] }}</td>
+              <td>{{ template[row]['List Type'] }}</td>
+            </tr>
+            <tr class="empty-height" v-for="index in emptyRowsCount" :key="index">
+              <td> </td>
+              <td> </td>
+              <td> </td>
+              <td> </td>
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-    <div class="stack stack1 border-top-x2">
-      <div class="base-format">
-        <h2> Attribute Configuration </h2>
-        <div class="button-container">
-          <button class="blue-button fit-width"> Add </button>
-          <button class="blue-button fit-width"> Group </button>
-          <button class="blue-button fit-width">Save </button>
-        </div>
       </div>
     </div>
   </div>
@@ -94,8 +102,48 @@ import VueMultiselect from 'vue-multiselect'
       VueMultiselect,
     },
     props: {
+      entity: String,
+    },
+    computed:{
+      testfire() {
+        return this.$root.entityTemplate['entity'];
+      },
+      entityProperties() {
+        if(this.template){
+          return Object.keys(this.template);
+        }
+        else return [];
+      },
+      entityPropertiesLength() {
+        if(this.template){
+          return Object.keys(this.template).length;
+        }
+        else return 0;
+      },
+      emptyRowsCount() {
+        const totalRowsNeeded = 12;
+        const filledRows = this.entityPropertiesLength;
+        return Math.max(totalRowsNeeded - filledRows, 0);
+      }
+    },
+    mounted() {
+      this.getAttributeTemplate();
+    },
+    watch: {
+      entity(newValue, oldValue) {
+        console.log("Entity Change", newValue, oldValue);
+        this.getAttributeTemplate();
+      }
     },
     methods: {
+      getAttributeTemplate(){
+        if(this.$root.entityTemplate[this.entity]){
+          this.template = this.$root.entityTemplate[this.entity];
+        }
+        else{
+          this.template = this.$root.entityTemplate[this.entity] = {};
+        }
+      },
 			onOpen() {
 				this.$nextTick(() => {
 					const dropdownList = document.querySelector('.vue-multiselect-list');
@@ -105,9 +153,42 @@ import VueMultiselect from 'vue-multiselect'
 					}
 				});
       },
+      add(){
+        if(!this.template[this.inputValue]){
+          this.template[this.inputValue] = {
+            "name": this.inputValue,
+            "type": '',
+            "link_reference_to": "",
+            "list": "",
+          };
+        }
+        /*
+        this.template['test'] = {
+          "name": 'Fake Name',
+          "type": 'Type Name',
+          "Link Reference To": "",
+          "list": "",
+        };
+        this.template['test2'] = {
+          "name": 'Fake Name',
+          "type": 'Type Name',
+          "Link Reference To": "",
+          "list": "",
+        };
+        this.template['test3'] = {
+          "name": 'Fake Name',
+          "type": 'Type Name',
+          "Link Reference To": "",
+          "list": "",
+        };
+        */
+        console.log("ROOT", this.$root.entityTemplate['entity']);
+      }
     },
     data: function(){
       return {
+        template: {},
+        inputValue: '',
         attributeTest: '',
         attributeTypeList: [
           'number',
@@ -275,6 +356,10 @@ h2 {
     gap: 10%;
   }
 
+  thead {
+    height: 50px;
+  }
+
   th.name {
     width: 15%; /* Adjust the width of the 'Name' column */
   }
@@ -297,6 +382,10 @@ h2 {
     border: 2px solid #000; /* Increase border size on hover */
   }
 
+
+  .empty-height{
+    height: 50px;
+  }
   .lightblue{
     background-color: lightblue;
   }

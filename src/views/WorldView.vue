@@ -1,5 +1,11 @@
 <template>
-	<div class="main-container">
+	<div class="main-container-start-col">
+		<div class="tab-collection border-x2">
+			<div class="tab border-x1" :class="{ 'is-selected': showMainView === 'ENTITY'}" > Entity           </div>
+			<div class="tab border-x1" :class="{ 'is-selected': showMainView === 'WORLD'}"> World            </div>
+			<div class="tab border-x1" :class="{ 'is-selected': showMainView === 'SHARED_ATTRIBUTE'}"> Shared Attribute </div>
+		</div>
+		<div class="bottom-row">
 		<div class="c20 border-x2">
 			<div class="stack-setup">
 				<div class="box">
@@ -57,10 +63,11 @@
 		</div>
 
 		<div v-if="showView === 'ATTRIBUTE_CONFIGURATION'" class="c80 border-x2">
-			<AttributeConfiguration />
+			<AttributeConfiguration :entity="selectedEntity"/>
 		</div>
 		<div v-else class="c80 border-x2">
 
+		</div>
 		</div>
 
 		<Attribute :visible="AttributeModalVisible" @close="closeAttributeModal"/>
@@ -83,7 +90,7 @@ export default {
 		return {
 			world: {
 				'Entity': {
-					'Template1': {},
+					'Template1': {test: 123},
 					'Template2': {},
 					'Template3': {},
 
@@ -101,6 +108,7 @@ export default {
 			selectedEntity: null,
 			test: '',
 			AttributeModalVisible: false,
+			showMainView: 'ENTITY',
 			showView: '',
 			//showView: 'ATTRIBUTE_CONFIGURATION',
 		}
@@ -191,15 +199,6 @@ export default {
 	border-radius: 5px 0 0 5px;
 }
 
-.button {
-	padding: 10px 20px;
-	font-size: 16px;
-	background-color: #007bff;
-	color: #fff;
-	border: none;
-	border-radius: 0 5px 5px 0;
-	cursor: pointer;
-}
 
 .subtitle {
 	font-size: 20px;
@@ -307,8 +306,37 @@ export default {
 	margin-top: 5px;
 }
 
+.tab-collection{
+	display: flex;
+	justify-content: space-between;
+	height: 23px;
+	background-color: #d4ebf2;
+}
+
+.tab{
+	flex: 1;
+	font-size: 22px;
+	text-align: center;
+
+	box-sizing: content-box;
+	height: 100%;
+
+}
+
+.tab:hover {
+	display: block;
+	cursor: pointer;
+
+	font-weight: bold;
+	background-color: #c0ccec;
+
+}
 
 
+
+p{
+	height: 100%;
+}
 
 </style>
 

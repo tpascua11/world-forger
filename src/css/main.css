@@ -32,8 +32,6 @@ body {
   font-weight: bold;
 }
 
-
-
 /* Fixes */
 .fit-width{
   width: 100%;
@@ -51,6 +49,24 @@ body {
   display: flex;
   align-items: center;
   margin-right: 10px; /* Adjust margin as needed */
+}
+
+
+
+
+
+.custom-input {
+  width: 200px;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+	font-family: "Neucha";
+  outline: none; /* Remove default focus outline */
+}
+
+.custom-input:focus {
+  border-color: dodgerblue; /* Change border color on focus */
 }
 
 
