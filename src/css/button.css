@@ -1,3 +1,4 @@
+/*GREEN */
 .green-button {
 	font-family: "Neucha";
 	font-size: 17px;
@@ -19,6 +20,7 @@
   background-color: #029c63; /* Darker shade of blue */
 }
 
+/*BLUE*/
 .blue-button {
 	font-family: "Neucha";
 	font-size: 17px;
@@ -39,6 +41,52 @@
   font-weight: bold;
   background-color: #6CB4EE; /* Darker shade of blue */
 }
+
+/*GREY*/
+.grey-button{
+	font-family: "Neucha";
+	font-size: 17px;
+  background-color: #c9c9c9; /* Blue color */
+  color: white; /* Text color */
+  padding: 10px 20px; /* Padding for the button */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Cursor style */
+  text-align: center; /* Center the text */
+  text-decoration: none; /* Remove default link decoration */
+  display: inline-block; /* Make it behave as a block element */
+}
+
+/* Hover effect */
+.grey-button:hover {
+	font-family: "Neucha";
+  font-weight: bold;
+  background-color: #989898; /* Darker shade of blue */
+}
+
+/*YELLOW */
+.yellow-button{
+	font-family: "Neucha";
+	font-size: 17px;
+  background-color: #e4bd67; /* Blue color */
+  color: white; /* Text color */
+  padding: 10px 20px; /* Padding for the button */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Cursor style */
+  text-align: center; /* Center the text */
+  text-decoration: none; /* Remove default link decoration */
+  display: inline-block; /* Make it behave as a block element */
+}
+
+/* Hover effect */
+.yellow-button:hover {
+	font-family: "Neucha";
+  font-weight: bold;
+  background-color: #d8a126; /* Darker shade of blue */
+}
+
+
 
 .is-selected {
 	background-color: #dcf2d4;

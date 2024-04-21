@@ -1,40 +1,48 @@
 <template>
   <div class="stack-setup">
-
-    <div class="stack stack1 border-top-x1">
+    <!--<div class="stack stack05 border-top-x2"> -->
+    <div class="stack stackFixed40 border-top-x2">
       <div class="base-format">
-        <h2> Attribute Configuration </h2>
-        <div class="button-container">
-          <input type="text" v-model="inputValue" class="custom-input">
-          <button class="blue-button fit-width" @click="add">
-            Add
+        <div class="title-container">
+          <h2> Attribute Configuration </h2>
+          <button class="grey-button save-button"
+                  :class="{'yellow-button': entityPropertiesLength}"
+                  @click="saveToWorld">
+            Save
           </button>
-          <button class="blue-button fit-width"> Save </button>
         </div>
       </div>
     </div>
-    <div class="stack stack7 trueHeight" v-if="entityPropertiesLength">
+    <div class="stack stack9 trueHeight">
       <div class="trueHeight">
         <table>
           <thead>
             <tr class="border-x1">
-              <th class="name">Attribute {{entity}}</th>
+              <th class="name">Attribute </th>
               <th class="type">Type</th>
               <th class="link">Link Reference To</th>
               <th class="listType">List Type</th>
             </tr>
           </thead>
           <tbody class="">
-            <tr v-for="row in entityProperties" :key="row.id">
+            <tr class="" v-for="row in referenceProperties" :key="row.id">
+              <td>{{row}}</td>
+              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['type']}} </td>
+              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['referenceTo']}} </td>
+              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['listType']}} </td>
+            </tr>
+
+            <tr class="yellow" v-for="row in entityProperties" :key="row.id">
               <td>{{row}}</td>
               <td>
                 <VueMultiselect
                     v-model="template[row]['type']"
                     :options="attributeTypeList"
                     placeholder="Change Data Type..."
-										:show-labels="false"
+                    :show-labels="false"
                     @open="onOpen"
                     class="attribute-layout"
+                    openDirection="below"
                     >
                     <template v-slot:option="{ option }">
                       <div v-if="typeof option !== 'object'">
@@ -50,10 +58,10 @@
                     </template>
                 </VueMultiselect>
               </td>
-              <td>{{ template[row]['Link Reference To'] }}</td>
-              <td>{{ template[row]['List Type'] }}</td>
+              <td>{{ template[row]['referenceTo'] }}</td>
+              <td>{{ template[row]['listType'] }}</td>
             </tr>
-            <tr class="empty-height" v-for="index in emptyRowsCount" :key="index">
+            <tr class="empty-height" v-for="index in 10" :key="index">
               <td> </td>
               <td> </td>
               <td> </td>
@@ -63,6 +71,15 @@
         </table>
       </div>
     </div>
+    <div class="stack stackFixed40">
+      <div class="button-container border-top-x2">
+      <input class="custom-input" v-model="inputValue" type="text"
+      placeholder="Add New Attribute ...">
+      <button class="blue-button save-button" @click="add"> Add Single </button>
+      <button class="blue-button save-button" @click="refresh"> Add Shared </button>
+      </div>
+    </div>
+
   </div>
   <!--
   <div class="trueHeight">
@@ -103,6 +120,7 @@ import VueMultiselect from 'vue-multiselect'
     },
     props: {
       entity: String,
+      entityName: String,
     },
     computed:{
       testfire() {
@@ -114,16 +132,42 @@ import VueMultiselect from 'vue-multiselect'
         }
         else return [];
       },
+      templateProperties() {
+        if(this.template){
+          return Object.keys(this.template);
+        }
+        else return [];
+      },
+      referenceProperties() {
+        if(this.referenceEntity){
+          return Object.keys(this.referenceEntity);
+        }
+        /*
+        if(this.selectedEntity){
+          return Object.keys(this.selectedEntity);
+        }
+        */
+        else return [];
+      },
       entityPropertiesLength() {
         if(this.template){
           return Object.keys(this.template).length;
         }
         else return 0;
       },
+      entityActive() {
+        if(this.template || (this.referenceEntity != {})){
+          return true;
+        }
+        else return false;
+      },
       emptyRowsCount() {
-        const totalRowsNeeded = 12;
+        const totalRowsNeeded = 10;
         const filledRows = this.entityPropertiesLength;
         return Math.max(totalRowsNeeded - filledRows, 0);
+      },
+      entityReferenceAndTemplateList(){
+        return [...this.entityProperties, ...this.entityProperties];
       }
     },
     mounted() {
@@ -133,15 +177,25 @@ import VueMultiselect from 'vue-multiselect'
       entity(newValue, oldValue) {
         console.log("Entity Change", newValue, oldValue);
         this.getAttributeTemplate();
-      }
+      },
+      entityName(newValue, oldValue) {
+        console.log("Entity Change", newValue, oldValue);
+        this.getAttributeTemplate();
+      },
     },
     methods: {
       getAttributeTemplate(){
-        if(this.$root.entityTemplate[this.entity]){
-          this.template = this.$root.entityTemplate[this.entity];
+        if(this.$root.entityTemplate[this.entityName]){
+          console.log("WHAT IS THIS ENTITY", this.entityName);
+          this.template = this.$root.entityTemplate[this.entityName];
+
+          this.referenceEntity = this.$root.world['Entity'][this.entityName];
         }
         else{
-          this.template = this.$root.entityTemplate[this.entity] = {};
+          console.log("WHAT IS THIS ENTITY", this.entityName);
+          this.template = this.$root.entityTemplate[this.entityName] = {};
+
+          this.referenceEntity = this.$root.world['Entity'][this.entityName];
         }
       },
 			onOpen() {
@@ -158,36 +212,29 @@ import VueMultiselect from 'vue-multiselect'
           this.template[this.inputValue] = {
             "name": this.inputValue,
             "type": '',
-            "link_reference_to": "",
-            "list": "",
+            "referenceTo": "",
+            "listType": "",
           };
         }
-        /*
-        this.template['test'] = {
-          "name": 'Fake Name',
-          "type": 'Type Name',
-          "Link Reference To": "",
-          "list": "",
-        };
-        this.template['test2'] = {
-          "name": 'Fake Name',
-          "type": 'Type Name',
-          "Link Reference To": "",
-          "list": "",
-        };
-        this.template['test3'] = {
-          "name": 'Fake Name',
-          "type": 'Type Name',
-          "Link Reference To": "",
-          "list": "",
-        };
-        */
-        console.log("ROOT", this.$root.entityTemplate['entity']);
+      },
+      saveToWorld(){
+        console.log("Save This Template", this.template);
+        for (let key in this.template) {
+          this.referenceEntity[key] = this.template[key];
+        }
+        this.template = {};
+        //this.$emit('updateAttribute', this.entityName, this.template);
+      },
+      refresh(){
+        this.$forceUpdate();
       }
     },
     data: function(){
       return {
+        test: 0,
+        trueMaxHeight: 500,
         template: {},
+        referenceEntity: {},
         inputValue: '',
         attributeTest: '',
         attributeTypeList: [
@@ -344,17 +391,48 @@ h2 {
   text-decoration-thickness: 2px;
 }
 
-
-.blue-button {
-	width: 30%;
+button {
+  width: 30%;
 }
 
+
 .button-container {
-    display: flex;
-    justify-content: center; /* Horizontally center the buttons */
-    align-items: center; /* Vertically center the buttons */
-    gap: 10%;
+  display: flex;
+  justify-content: left; /* Horizontally center the buttons */
+  align-items: center; /* Vertically center the buttons */
+
+  padding: 5px; /* Apply padding of 20 pixels inside the container */
+  gap: 1%; 
+
+}
+
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+  .custom-input {
+    width: 200px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: "Neucha";
+    outline: none; /* Remove default focus outline */
+    height: 10px;
   }
+
+.custom-input:focus {
+  border-color: dodgerblue; /* Change border color on focus */
+}
+.save-button{
+  height: 30px;
+  padding: 4px 5px;
+}
+
+
+
 
   thead {
     height: 50px;
@@ -377,17 +455,26 @@ h2 {
     width: 45%; /* Adjust the width of the 'List Type' column */
   }
 
+  tr{
+    height: 20px;
+  }
+
   tr:hover {
     background-color: lightblue; /* Highlight background on hover */
     border: 2px solid #000; /* Increase border size on hover */
   }
 
-
   .empty-height{
-    height: 50px;
+    height: 30px;
   }
   .lightblue{
     background-color: lightblue;
   }
+  .yellow{
+    background-color: #fbfae6;
+  }
+
+
+
 </style>
 

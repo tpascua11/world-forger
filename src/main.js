@@ -9,4 +9,4 @@ import '@/css/custom.css'
 
 
 const mainApp = createApp(App).use(store).use(router).mount('#app')
-console.log("mainAPp", mainApp);
+console.log("mainApp", mainApp);

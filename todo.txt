@@ -1,0 +1,18 @@
+1. Attribute Configuration
+  Make Input/Add new property better
+  Put Save button
+
+  Make Save Button save to the actually world object
+
+  Only 2 things to test for now: Basic Type and Input,
+  Make Entity List work and show input for the rows Page
+  Make Entity List more fun and interactive
+
+
+  Create World Page
+    Make A Save To Local Storage
+    Make A load to local storage
+    Make A Save to file
+
+
+

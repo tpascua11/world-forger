@@ -1,5 +1,5 @@
 .attribute-layout .multiselect__option {
-  /*border: 1px solid black;*/
+  z-index: 500;
 }
 
 .attribute-layout {
@@ -9,5 +9,38 @@
   background-color: lightblue;
   border: 1px solid black;
   border-radius: 4px;
+  z-index: 500;
+}
 
+.attribute-layout .multiselect {
+  height: 20px;
+  min-height: 40px;
+}
+
+.attribute-layout .multiselect__single {
+  height: 10px;
+  min-height: 10px;
+}
+
+.attribute-layout .multiselect__input {
+  height: 10px;
+  min-height: 10px;
+}
+
+.attribute-layout .multiselect__current {
+  height: 10px;
+  min-height: 10px;
+}
+
+
+.attribute-layout .multiselect__select {
+
+}
+
+
+.attribute-layout .multiselect__content-wrapper {
+}
+
+
+.attribute-layout {
 }

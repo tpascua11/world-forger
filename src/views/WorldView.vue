@@ -11,9 +11,8 @@
 				<div class="box">
 					<div class="box-7-8 border-x2">
 						<VueMultiselect
-							v-model="selectedEntity"
+							v-model="selectedEntityName"
 							:options="entityNames"
-							:option-height="200"
 							:taggable="true"
 							@tag="addNewProperty"
 							tag-placeholder="Add this as new tag"
@@ -57,13 +56,17 @@
 					</div>
 				</div>
 				<div class="name-box">
-					<button class="green-button fit-width">Add {{selectedEntity}}</button>
+					<button class="green-button fit-width">Add {{selectedEntityName}}</button>
 				</div>
 			</div>
 		</div>
 
 		<div v-if="showView === 'ATTRIBUTE_CONFIGURATION'" class="c80 border-x2">
-			<AttributeConfiguration :entity="selectedEntity"/>
+			<AttributeConfiguration
+				:entityName="selectedEntityName"
+				:selectedEntity="selectedEntity"
+				@updateAttribute="updateEntityAttribute"
+				/>
 		</div>
 		<div v-else class="c80 border-x2">
 
@@ -86,6 +89,15 @@ export default {
 		Attribute,
 		AttributeConfiguration,
 	},
+	watch: {
+		selectedEntityName(newValue){
+			console.log("SELECTED NEW VALUE", newValue);
+			if(this.$root.world['Entity'][newValue]){
+				console.log("SELECTED ENTITY", this.$root.world['Entity'][newValue]);
+				this.selectedEntity = this.$root.world['Entity'][newValue];
+			}
+		}
+	},
 	data: function() {
 		return {
 			world: {
@@ -105,7 +117,8 @@ export default {
 			newPropertyName: '',
 			propertyNames: {} ,
 			list: ['apple', 'orage', 'gatorade'],
-			selectedEntity: null,
+			selectedEntity: {},
+			selectedEntityName: '',
 			test: '',
 			AttributeModalVisible: false,
 			showMainView: 'ENTITY',
@@ -123,7 +136,7 @@ export default {
 
 			this.world['Entity'][name]= '';
 			console.log("WORLD", this.world);
-			this.selectedEntity = name;
+			this.selectedEntityName = name;
 		},
 		addPropertyName() {
 			if (this.world['Entity'][this.newPropertyName] !== undefined) {
@@ -133,6 +146,20 @@ export default {
 
 			this.world['Entity'][this.newPropertyName]= '';
 			console.log("WORLD", this.world);
+		},
+		updateEntityAttribute(entityName, attribute){
+			console.log("TEST UPDATES");
+			console.log("Entity", JSON.stringify(entityName));
+			console.log("Attribute", JSON.stringify(attribute));
+
+			console.log("THIS WORLD", JSON.stringify(this.$root.world['Entity'][entityName]));
+			for (let key in attribute) {
+				this.$root.world['Entity'][entityName][key] = attribute[key];
+			}
+
+			this.selectedEntity = this.$root.world['Entity'][entityName];
+			//Vue.set(this, 'selectedEntity', this.$root.world['Entity'][entityName]);
+			//this.$set(this, 'selectedEntity', this.$root.world['Entity'][entityName]);
 		},
 		openArributeModal(){
 			this.AttributeModalVisible = true;
@@ -154,7 +181,7 @@ export default {
 		entityNames() {
 			return Object.keys(this.world['Entity']);
 		},
-	}
+	},
 }
 </script>
 
@@ -331,8 +358,6 @@ export default {
 	background-color: #c0ccec;
 
 }
-
-
 
 p{
 	height: 100%;

@@ -39,7 +39,6 @@
 }
 
 .cool {
-
   border-top: 2px solid black; /* Border for the top side */
   border-left: 2px solid black; /* Border for the left side */
   border-right: 2px solid black; /* Border for the right side */
@@ -131,12 +130,15 @@
 
 .stack8 {
   flex: 80%; /* 40% width */
-  background-color: #ff5733; /* Background color */
 }
 
 .stack9 {
   flex: 90%; /* 40% width */
-  background-color: #ff5733; /* Background color */
+}
+
+.stackFixed40 {
+  flex: 1;
+  height: 10%;
 }
 
 .box{

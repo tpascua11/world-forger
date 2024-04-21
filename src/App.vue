@@ -23,6 +23,25 @@
       //Entity Template Stores Changes to Entity Attributes
       //For the Real Word Entity Attributes, Resets after it pass through
       this.$root.entityTemplate = {};
+
+      this.$root.world = {
+				'Entity': {
+          'Template1': {
+            'Attribute 1': {
+              type: 'number',
+              referenceTo: 'test1',
+              listType: 'test2',
+            }
+          },
+					'Template2': {},
+					'Template3': {
+            templateInfo: {},
+            templateOrder: [],
+            rules: {},
+            list: {},
+          },
+				},
+			};
     }
 };
 

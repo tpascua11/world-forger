@@ -55,18 +55,5 @@ body {
 
 
 
-.custom-input {
-  width: 200px;
-  padding: 10px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-	font-family: "Neucha";
-  outline: none; /* Remove default focus outline */
-}
-
-.custom-input:focus {
-  border-color: dodgerblue; /* Change border color on focus */
-}
 
 
