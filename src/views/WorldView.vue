@@ -19,6 +19,7 @@
 							placeholder="Select or Add Property..."
 							ref="multiselect"
 							@input="selectEntityInputCSS"
+              :show-labels="false"
 							>
 
 							<template v-slot:singleLabel="{ option }">
@@ -48,15 +49,30 @@
 					</div>
 				</div>
 				<div class="stack stack3 stack-overflow">
-					<div class="lined-paper">
-							<div v-for="(name, index) in listOfNames" :key="index" class="name-box">
-									<span class="index">{{ index + 1 }}. </span>
-									<span class="name">{{ name }}</span>
+					<div class="better-lined-paper">
+							<div v-for="(index, key) in entityList"
+										:key="key" class="better-name-box border-x1"
+										@click="selectEntityItem(key)"
+										:class="
+										{
+											'is-changed' : (itemIsBeingEdited && entityChangeList[selectedEntityName][key]),
+											'is-selected': selectedEntityItemKey  === key,
+											}">
+									<span class="better-index">{{ key  }}. {{entityChangeList[key]}}</span>
+									<span class="better-name">{{ computedSelectedEntity.list[index].name}}</span>
 							</div>
 					</div>
+				<!--
+					<div class="lined-paper">
+							<div v-for="(index, key) in entityList" :key="key" class="name-box">
+									<span class="index">{{ key  }}. </span>
+									<span class="name">{{ computedSelectedEntity.list[index].name}}</span>
+							</div>
+					</div>
+					-->
 				</div>
 				<div class="name-box">
-					<button class="green-button fit-width">Add {{selectedEntityName}}</button>
+					<button class="green-button fit-width" @click="addToEntityList"> Add {{selectedEntityName}}</button>
 				</div>
 			</div>
 		</div>
@@ -64,9 +80,15 @@
 		<div v-if="showView === 'ATTRIBUTE_CONFIGURATION'" class="c80 border-x2">
 			<AttributeConfiguration
 				:entityName="selectedEntityName"
-				:selectedEntity="selectedEntity"
 				@updateAttribute="updateEntityAttribute"
 				/>
+		</div>
+		<div v-else-if="showView === 'ENTITY_ITEM'" class="c80 border-x2">
+			<EntityItem :entityItemKey=selectedEntityItemKey
+									:entityName="selectedEntityName"
+									@update-parent="refresh"
+									@update-entity-item-list="checkEntityItemEdited"
+									/>
 		</div>
 		<div v-else class="c80 border-x2">
 
@@ -81,6 +103,7 @@
 import VueMultiselect from 'vue-multiselect'
 import Attribute from '@/bigComponents/Attribute.vue'
 import AttributeConfiguration from '@/components/AttributeConfiguration.vue'
+import EntityItem from '@/components/EntityItem.vue'
 
 export default {
 	name: 'WorldView',
@@ -88,6 +111,7 @@ export default {
 		VueMultiselect,
 		Attribute,
 		AttributeConfiguration,
+		EntityItem,
 	},
 	watch: {
 		selectedEntityName(newValue){
@@ -95,6 +119,10 @@ export default {
 			if(this.$root.world['Entity'][newValue]){
 				console.log("SELECTED ENTITY", this.$root.world['Entity'][newValue]);
 				this.selectedEntity = this.$root.world['Entity'][newValue];
+				this.selectedEntityList = this.$root.world['Entity'][newValue].list;
+			}
+			if(!this.$root.entityItemIsEdited[this.selectedEntityName]){
+				this.$root.entityItemIsEdited[this.selectedEntityname] = {};
 			}
 		}
 	},
@@ -104,8 +132,6 @@ export default {
 				'Entity': {
 					'Template1': {test: 123},
 					'Template2': {},
-					'Template3': {},
-
 				},
 			},
 			listOfNames:  [
@@ -118,11 +144,16 @@ export default {
 			propertyNames: {} ,
 			list: ['apple', 'orage', 'gatorade'],
 			selectedEntity: {},
+			selectedEntityList: {},
 			selectedEntityName: '',
+
+			selectedEntityItem: {},
+			selectedEntityItemKey: '',
 			test: '',
 			AttributeModalVisible: false,
 			showMainView: 'ENTITY',
 			showView: '',
+			entityChangeList: {},
 			//showView: 'ATTRIBUTE_CONFIGURATION',
 		}
 	},
@@ -147,6 +178,11 @@ export default {
 			this.world['Entity'][this.newPropertyName]= '';
 			console.log("WORLD", this.world);
 		},
+		addToEntityList(){
+			let nextKey = Object.keys(this.$root.world['Entity'][this.selectedEntityName].list).length;
+			console.log("next key", nextKey);
+			this.selectedEntityList[nextKey] = {};
+		},
 		updateEntityAttribute(entityName, attribute){
 			console.log("TEST UPDATES");
 			console.log("Entity", JSON.stringify(entityName));
@@ -160,6 +196,11 @@ export default {
 			this.selectedEntity = this.$root.world['Entity'][entityName];
 			//Vue.set(this, 'selectedEntity', this.$root.world['Entity'][entityName]);
 			//this.$set(this, 'selectedEntity', this.$root.world['Entity'][entityName]);
+		},
+		selectEntityItem(key){
+			console.log("KEY", key);
+			this.selectedEntityItemKey = key;
+			this.showView = 'ENTITY_ITEM';
 		},
 		openArributeModal(){
 			this.AttributeModalVisible = true;
@@ -175,11 +216,47 @@ export default {
 		changeViewMode(view){
 			console.log("WHAT IS VIEW", view);
 			this.showView = view;
+		},
+		checkEntityItemEdited(EntityName, ItemName, condition){
+			let ent = this.entityChangeList = this.$root.entityItemIsEdited;
+			if(!ent[EntityName]) ent[EntityName] = {};
+			ent[EntityName][ItemName] = condition;
+
+			console.log("NEW LIST", ent);
+			this.$forceUpdate();
+		},
+		refresh(){
+			console.log("REFRESH!");
+			this.$forceUpdate();
 		}
 	},
 	computed:{
 		entityNames() {
-			return Object.keys(this.world['Entity']);
+			//return Object.keys(this.world['Entity']);
+			return Object.keys(this.$root.world['Entity']);
+		},
+		entityList() {
+		/*
+			if (this.$root.world?.['Entity']?.[this.selectedEntityName]?.list) {
+				return Object.keys(this.$root.world['Entity'][this.selectedEntityName].list);
+			}
+			*/
+			if (this.$root.world?.['Entity']?.[this.selectedEntityName]?.list) {
+				return Object.keys(this.selectedEntityList);
+			}
+			else return [];
+		},
+		computedSelectedEntity(){
+				return this.$root.world['Entity'][this.selectedEntityName];
+		},
+		itemIsBeingEdited(){
+			if(this.entityChangeList){
+				if(this.entityChangeList[this.selectedEntityName]){
+					return true;
+				}
+				else return false;
+			}
+			else return false;
 		},
 	},
 }
@@ -280,6 +357,10 @@ export default {
   font-weight: bold;
 }
 
+.name-box:hover {
+	background-color: lightblue;
+}
+
 .index {
   font-weight: bold;
 	text-align: right;
@@ -300,7 +381,8 @@ export default {
   padding: 5px;
   border: 1px solid #000;
 	height: 100%; /* Fixed height */
-  overflow-y: auto; /* Enable vertical scrollbar */
+	overflow-y: auto; /* Enable vertical scrollbar */
+	overflow: hidden;
 }
 
 .lined-paper::-webkit-scrollbar {
@@ -361,6 +443,41 @@ export default {
 
 p{
 	height: 100%;
+}
+
+.better-lined-paper{
+	height: 100%;
+}
+
+.better-name-box{
+	height: 25px;
+  display: flex;
+}
+.better-name-box:hover{
+	background-color: #d4ebf2;
+	cursor: pointer;
+}
+
+
+.better-index {
+  font-weight: bold;
+	text-align: center;
+	flex: 2;
+
+	/* font-family: "Times New Roman", Times, serif; */
+	font-size: 12px;
+
+	margin-left: 1px;
+	margin-top: 10px;
+
+}
+
+.better-name {
+  font-weight: bold;
+	margin-left: 15px;
+	margin-top: 7px;
+	flex: 15;
+
 }
 
 </style>

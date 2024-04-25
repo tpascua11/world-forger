@@ -86,12 +86,27 @@
   background-color: #d8a126; /* Darker shade of blue */
 }
 
-
-
 .is-selected {
-	background-color: #dcf2d4;
+	background-color: #dcf2d4 !important;
 }
 
 .is-selected:hover {
 	background-color: #bce6ad !important;
 }
+
+.is-changed {
+	background-color: #fffde6;
+  color: black;
+}
+
+.is-changed:hover {
+}
+
+
+.is-clickable {
+}
+
+.is-clickable:hover {
+	background-color: #d4ebf2;
+}
+

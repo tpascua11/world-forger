@@ -81,34 +81,6 @@
     </div>
 
   </div>
-  <!--
-  <div class="trueHeight">
-    <table>
-      <thead>
-        <tr class="border-x1">
-          <th class="name">Name</th>
-          <th class="type">Type</th>
-          <th class="link">Link Reference To</th>
-          <th class="listType">List Type</th>
-        </tr>
-      </thead>
-      <tbody class="">
-        <tr v-for="row in attributeTemplate" :key="row.id">
-          <td>{{ row['Name'] }}</td>
-          <td>{{ row['Type']}}</td>
-          <td>{{ row['Link Reference To']}}</td>
-          <td>{{ row['List Type']}}</td>
-        </tr>
-        <tr v-for="row in attributeTemplate" :key="row.id">
-          <td>{{ row['Name'] }}</td>
-          <td>{{ row['Type']}}</td>
-          <td>{{ row['Link Reference To']}}</td>
-          <td>{{ row['List Type']}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  -->
 </template>
 
 <script>
@@ -185,17 +157,20 @@ import VueMultiselect from 'vue-multiselect'
     },
     methods: {
       getAttributeTemplate(){
-        if(this.$root.entityTemplate[this.entityName]){
+        console.log("WHAT IS ", this.$root.entityTemplate[this.entityName]);
+        if (this.$root.entityTemplate[this.entityName]) {
           console.log("WHAT IS THIS ENTITY", this.entityName);
           this.template = this.$root.entityTemplate[this.entityName];
 
-          this.referenceEntity = this.$root.world['Entity'][this.entityName];
+          this.referenceEntity =
+            this.$root.world['Entity'][this.entityName].templateInfo;
         }
         else{
           console.log("WHAT IS THIS ENTITY", this.entityName);
           this.template = this.$root.entityTemplate[this.entityName] = {};
 
-          this.referenceEntity = this.$root.world['Entity'][this.entityName];
+          this.referenceEntity =
+            this.$root.world['Entity'][this.entityName].templateInfo;
         }
       },
 			onOpen() {
@@ -222,8 +197,10 @@ import VueMultiselect from 'vue-multiselect'
         for (let key in this.template) {
           this.referenceEntity[key] = this.template[key];
         }
+        console.log("SEE REFERENCE", JSON.stringify(this.referenceEntity));
+        console.log("SEE REFERENCE", JSON.stringify(this.$root.world));
         this.template = {};
-        //this.$emit('updateAttribute', this.entityName, this.template);
+        this.$root.entityTemplate[this.entityName] = {};
       },
       refresh(){
         this.$forceUpdate();
@@ -248,70 +225,7 @@ import VueMultiselect from 'vue-multiselect'
           'table_list',
           'image_url'
         ],
-        attributeTemplate:
-        [
-          {
-            "Name": "Object1",
-            "Type": "Type1",
-            "Link Reference To": "Reference1",
-            "List Type": "ListType1"
-          },
-          {
-            "Name": "Object2",
-            "Type": "Type2",
-            "Link Reference To": "Reference2",
-            "List Type": "ListType2"
-          },
-          {
-            "Name": "Object3",
-            "Type": "Type3",
-            "Link Reference To": "Reference3",
-            "List Type": "ListType3"
-          },
-          {
-            "Name": "Object4",
-            "Type": "Type1",
-            "Link Reference To": "Reference4",
-            "List Type": "ListType4"
-          },
-          {
-            "Name": "Object5",
-            "Type": "Type2",
-            "Link Reference To": "Reference5",
-            "List Type": "ListType5"
-          },
-          {
-            "Name": "Object6",
-            "Type": "Type3",
-            "Link Reference To": "Reference6",
-            "List Type": "ListType6"
-          },
-          {
-            "Name": "Object7",
-            "Type": "Type1",
-            "Link Reference To": "Reference7",
-            "List Type": "ListType7"
-          },
-          {
-            "Name": "Object8",
-            "Type": "Type2",
-            "Link Reference To": "Reference8",
-            "List Type": "ListType8"
-          },
-          {
-            "Name": "Object9",
-            "Type": "Type3",
-            "Link Reference To": "Reference9",
-            "List Type": "ListType9"
-          },
-          {
-            "Name": "Object10",
-            "Type": "Type1",
-            "Link Reference To": "Reference10",
-            "List Type": "ListType10"
-          }
-        ],
-      }
+       }
     }
   }
 

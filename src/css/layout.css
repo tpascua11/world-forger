@@ -8,6 +8,7 @@
   position:fixed;
   box-sizing: border-box;
 
+  background-color: #76b852; /* Background color */
   /*flex-direction: column;*/
 }
 
@@ -24,6 +25,19 @@
   flex-direction: column;
 }
 
+.main-container-flow {
+  padding: 10px; /* Apply padding of 20 pixels inside the container */
+  margin-top: -15px;
+  display: flex;
+
+  width: 99%;
+  height: 98%;
+
+  position:fixed;
+  box-sizing: border-box;
+
+  /*flex-direction: column;*/
+}
 
 .top-row {
   flex: 1 0 25px;

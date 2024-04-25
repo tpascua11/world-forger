@@ -23,23 +23,51 @@
       //Entity Template Stores Changes to Entity Attributes
       //For the Real Word Entity Attributes, Resets after it pass through
       this.$root.entityTemplate = {};
+      this.$root.entityItem = {}; // ['entityName'].list[key]
+      this.$root.entityItemIsEdited = {}; // ['entityName'].list[key]
 
       this.$root.world = {
 				'Entity': {
-          'Template1': {
-            'Attribute 1': {
-              type: 'number',
-              referenceTo: 'test1',
-              listType: 'test2',
-            }
+					'Template Fire': {
+            templateInfo: {
+              'name': {
+                type: 'string',
+                important: true
+              },
+              'power': {
+                type: 'number',
+              },
+              'love':{
+                type: 'number',
+              }
+            },
+            templateOrder: [],
+            rules: {},
+            list: {
+              0: {name: 'Flamer', power: 10, coolnessFactorAndPowerUps: 10000,
+                tower: '10', health: 0, mana: 0, stamina: 0, love: 9},
+              1: {name: 'Fire', power: 20  , },
+            },
+            description: '',
           },
-					'Template2': {},
-					'Template3': {
-            templateInfo: {},
+					'Template Ice': {
+            templateInfo: {
+              'name': {
+                type: 'string',
+                important: true
+              },
+              'attribute 1': {
+                type: 'number',
+                referenceTo: 'test1',
+                listType: 'test2',
+              }
+            },
             templateOrder: [],
             rules: {},
             list: {},
+            description: '',
           },
+
 				},
 			};
     }
