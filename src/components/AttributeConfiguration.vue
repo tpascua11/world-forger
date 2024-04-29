@@ -18,6 +18,7 @@
         <table>
           <thead>
             <tr class="border-x1">
+              <th class="order"> Order </th>
               <th class="name">Attribute </th>
               <th class="type">Type</th>
               <th class="link">Link Reference To</th>
@@ -25,7 +26,10 @@
             </tr>
           </thead>
           <tbody class="">
-            <tr class="" v-for="row in referenceProperties" :key="row.id">
+            <tr class="" v-for="(row,index) in referenceProperties" :key="row.id">
+              <td>
+                {{index}}
+              </td>
               <td>{{row}}</td>
               <td v-if="referenceEntity[row]">{{ referenceEntity[row]['type']}} </td>
               <td v-if="referenceEntity[row]">{{ referenceEntity[row]['referenceTo']}} </td>
@@ -33,7 +37,8 @@
             </tr>
 
             <tr class="yellow" v-for="row in entityProperties" :key="row.id">
-              <td>{{row}}</td>
+              <td>
+              </td>
               <td>
                 <VueMultiselect
                     v-model="template[row]['type']"
@@ -62,6 +67,7 @@
               <td>{{ template[row]['listType'] }}</td>
             </tr>
             <tr class="empty-height" v-for="index in 10" :key="index">
+              <td> </td>
               <td> </td>
               <td> </td>
               <td> </td>
@@ -352,6 +358,11 @@ button {
     height: 50px;
   }
 
+
+  th.order {
+    width: 3%; /* Adjust the width of the 'Name' column */
+  }
+
   th.name {
     width: 15%; /* Adjust the width of the 'Name' column */
   }
@@ -366,7 +377,7 @@ button {
   }
 
   th.listType {
-    width: 45%; /* Adjust the width of the 'List Type' column */
+    width: 30%; /* Adjust the width of the 'List Type' column */
   }
 
   tr{
