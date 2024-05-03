@@ -23,6 +23,8 @@
               <th class="type">Type</th>
               <th class="link">Link Reference To</th>
               <th class="listType">List Type</th>
+              <th class="remove"> </th>
+
             </tr>
           </thead>
           <tbody class="">
@@ -34,10 +36,17 @@
               <td v-if="referenceEntity[row]">{{ referenceEntity[row]['type']}} </td>
               <td v-if="referenceEntity[row]">{{ referenceEntity[row]['referenceTo']}} </td>
               <td v-if="referenceEntity[row]">{{ referenceEntity[row]['listType']}} </td>
+
+              <td>
+                <button class="red-button save-button fit-button-small" 
+                @click="removeAttribute(row)"> remove </button>
+              </td>
             </tr>
 
             <tr class="yellow" v-for="row in entityProperties" :key="row.id">
+              <td> </td>
               <td>
+                {{row}}
               </td>
               <td>
                 <VueMultiselect
@@ -65,8 +74,12 @@
               </td>
               <td>{{ template[row]['referenceTo'] }}</td>
               <td>{{ template[row]['listType'] }}</td>
+              <td>
+                <button class="red-button save-button fit-button" > remove </button>
+              </td>
             </tr>
             <tr class="empty-height" v-for="index in 10" :key="index">
+              <td> </td>
               <td> </td>
               <td> </td>
               <td> </td>
@@ -198,6 +211,20 @@ import VueMultiselect from 'vue-multiselect'
           };
         }
       },
+      removeAttribute(name){
+        console.log("remove attribute", name);
+        if (this.referenceEntity && typeof this.referenceEntity === 'object') {
+          if (name in this.referenceEntity) {
+            delete this.referenceEntity[name];
+            console.log(`Attribute '${name}' removed successfully.`);
+          } else {
+            console.log(`Attribute '${name}' does not exist in the object.`);
+          }
+        } else {
+          console.log("Invalid reference entity or reference entity is not an object.");
+        }
+        this.refresh();
+      },
       saveToWorld(){
         console.log("Save This Template", this.template);
         for (let key in this.template) {
@@ -271,6 +298,8 @@ th.link {
 th.listType {
   width: 20%; /* Adjust the width of the 'List Type' column */
 }
+
+
 /*tr:nth-child(even) {
 /*  background-color: #f9f9f9;
 /*}
@@ -351,6 +380,16 @@ button {
   padding: 4px 5px;
 }
 
+.fit-button{
+  width: 100%;
+}
+
+.fit-button-small{
+  width: 100%;
+  height: 80%;
+}
+
+
 
 
 
@@ -377,7 +416,11 @@ button {
   }
 
   th.listType {
-    width: 30%; /* Adjust the width of the 'List Type' column */
+    width: 20%; /* Adjust the width of the 'List Type' column */
+  }
+
+  th.remove {
+    width: 10%; /* Adjust the width of the 'List Type' column */
   }
 
   tr{
