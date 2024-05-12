@@ -1,98 +1,105 @@
 <template>
 	<div class="main-container-start-col">
-		<div class="tab-collection border-x2">
-			<div class="tab border-x1" :class="{ 'is-selected': showMainView === 'ENTITY'}" > Entity           </div>
-			<div class="tab border-x1" :class="{ 'is-selected': showMainView === 'WORLD'}"> World            </div>
-			<div class="tab border-x1" :class="{ 'is-selected': showMainView === 'SHARED_ATTRIBUTE'}"> Shared Attribute </div>
+		<div class="tab-collection">
+			<div @click="changeMainViewMode('ENTITY')" 					 class="tab border-x1"  :class="{ 'is-selected': showMainView === 'ENTITY'}" > Entity           </div>
+			<div @click="changeMainViewMode('WORLD')" 					 class="tab border-x1" 	:class="{ 'is-selected': showMainView === 'WORLD'}"> World            </div>
+			<div @click="changeMainViewMode('SHARED_ATTRIBUTE')" class="tab border-x1"  :class="{ 'is-selected': showMainView === 'SHARED_ATTRIBUTE'}"> Shared Attribute </div>
 		</div>
-		<div class="bottom-row">
-		<div class="c20 border-x2">
-			<div class="stack-setup">
-				<div class="box">
-					<div class="box-7-8 border-x2">
-						<VueMultiselect
-							v-model="selectedEntityName"
-							:options="entityNames"
-							:taggable="true"
-							@tag="addNewProperty"
-							tag-placeholder="Add this as new tag"
-							placeholder="Select or Add Property..."
-							ref="multiselect"
-							@input="selectEntityInputCSS"
-              :show-labels="false"
-							>
 
-							<template v-slot:singleLabel="{ option }">
-								<div class="title4">
-								{{ option }}
-								</div>
-							</template>
-							<template v-slot:option="{ option }">
-								<div v-if="typeof option !== 'object'">
-									<div class="title4">
-										{{option}}
-									</div>
-								</div>
-								<div v-else>
-									<div class="title4">
-										{{option.label}}
-									</div>
-								</div>
-							</template>
+		<!-- ENTITY VIEW -->
+		<div v-if="showMainView === 'ENTITY'" class="bottom-row">
+			<div class="c20 border-L-x1">
+				<div class="stack-setup">
+					<div class="box">
+						<div class="box-7-8 border-x2">
+							<VueMultiselect
+								v-model="selectedEntityName"
+								:options="entityNames"
+								:taggable="true"
+								@tag="addNewProperty"
+								tag-placeholder="Add this as new tag"
+								placeholder="Select or Add Property..."
+								ref="multiselect"
+								@input="selectEntityInputCSS"
+								:show-labels="false"
+								>
 
-						</VueMultiselect>
-					</div>
-					<div class="box-1-8 border-x1 entity-box">
-						<div class="entity-icon" @click="changeViewMode('ATTRIBUTE_CONFIGURATION');">
-							<i class="ra ra-repair ra-2x"></i>
+								<template v-slot:singleLabel="{ option }">
+									<div class="title4">
+									{{ option }}
+									</div>
+								</template>
+								<template v-slot:option="{ option }">
+									<div v-if="typeof option !== 'object'">
+										<div class="title4">
+											{{option}}
+										</div>
+									</div>
+									<div v-else>
+										<div class="title4">
+											{{option.label}}
+										</div>
+									</div>
+								</template>
+
+							</VueMultiselect>
+						</div>
+						<div class="box-1-8 border-x1 entity-box">
+							<div class="entity-icon" @click="changeViewMode('ATTRIBUTE_CONFIGURATION');">
+								<i class="ra ra-repair ra-2x"></i>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="stack stack3 stack-overflow">
-					<div class="better-lined-paper">
-							<div v-for="(index, key) in entityList"
-										:key="key" class="better-name-box border-x1"
-										@click="selectEntityItem(key)"
-										:class="
-										{
-											'is-changed' : (itemIsBeingEdited && entityChangeList[selectedEntityName][key]),
-											'is-selected': selectedEntityItemKey  === key,
-											}">
-									<span class="better-index">{{ key  }}. {{entityChangeList[key]}}</span>
-									<span class="better-name">{{ computedSelectedEntity.list[index].name}}</span>
-							</div>
+					<div class="stack stack3 stack-overflow">
+						<div class="better-lined-paper">
+								<div v-for="(index, key) in entityList"
+											:key="key" class="better-name-box border-x1"
+											@click="selectEntityItem(key)"
+											:class="
+											{
+												'is-changed' : (itemIsBeingEdited && entityChangeList[selectedEntityName][key]),
+												'is-selected': selectedEntityItemKey  === key,
+												}">
+										<span class="better-index">{{ key  }}. {{entityChangeList[key]}}</span>
+										<span class="better-name">{{ computedSelectedEntity.list[index].name}}</span>
+								</div>
+						</div>
+					<!--
+						<div class="lined-paper">
+								<div v-for="(index, key) in entityList" :key="key" class="name-box">
+										<span class="index">{{ key  }}. </span>
+										<span class="name">{{ computedSelectedEntity.list[index].name}}</span>
+								</div>
+						</div>
+						-->
 					</div>
-				<!--
-					<div class="lined-paper">
-							<div v-for="(index, key) in entityList" :key="key" class="name-box">
-									<span class="index">{{ key  }}. </span>
-									<span class="name">{{ computedSelectedEntity.list[index].name}}</span>
-							</div>
+					<div class="name-box">
+						<button class="green-button fit-width" @click="addToEntityList"> Add {{selectedEntityName}}</button>
 					</div>
-					-->
 				</div>
-				<div class="name-box">
-					<button class="green-button fit-width" @click="addToEntityList"> Add {{selectedEntityName}}</button>
-				</div>
+			</div>
+
+			<div v-if="(showView === 'ATTRIBUTE_CONFIGURATION') && selectedEntityExist" class="c80 smile-x1">
+				<AttributeConfiguration
+					:entityName="selectedEntityName"
+					@updateAttribute="updateEntityAttribute"
+					/>
+			</div>
+			<div v-else-if="showView === 'ENTITY_ITEM'" class="c80 smile-x1">
+				<EntityItem :entityItemKey=selectedEntityItemKey
+										:entityName="selectedEntityName"
+										@update-parent="refresh"
+										@update-entity-item-list="checkEntityItemEdited"
+										/>
+			</div>
+			<div v-else class="c80 border-x2">
+
 			</div>
 		</div>
 
-		<div v-if="showView === 'ATTRIBUTE_CONFIGURATION'" class="c80 border-x2">
-			<AttributeConfiguration
-				:entityName="selectedEntityName"
-				@updateAttribute="updateEntityAttribute"
-				/>
-		</div>
-		<div v-else-if="showView === 'ENTITY_ITEM'" class="c80 border-x2">
-			<EntityItem :entityItemKey=selectedEntityItemKey
-									:entityName="selectedEntityName"
-									@update-parent="refresh"
-									@update-entity-item-list="checkEntityItemEdited"
-									/>
-		</div>
-		<div v-else class="c80 border-x2">
-
-		</div>
+		<!-- WORLD VIEW -->
+		<div v-if="showMainView === 'WORLD'" class="bottom-row smile-x1">
+			<WorldConfiguration @resetWorld="resetWorld"/>
 		</div>
 
 		<Attribute :visible="AttributeModalVisible" @close="closeAttributeModal"/>
@@ -103,6 +110,7 @@
 import VueMultiselect from 'vue-multiselect'
 import Attribute from '@/bigComponents/Attribute.vue'
 import AttributeConfiguration from '@/components/AttributeConfiguration.vue'
+import WorldConfiguration from '@/components/WorldConfiguration.vue'
 import EntityItem from '@/components/EntityItem.vue'
 
 export default {
@@ -111,6 +119,7 @@ export default {
 		VueMultiselect,
 		Attribute,
 		AttributeConfiguration,
+		WorldConfiguration,
 		EntityItem,
 	},
 	watch: {
@@ -120,6 +129,8 @@ export default {
 				console.log("SELECTED ENTITY", this.$root.world['Entity'][newValue]);
 				this.selectedEntity = this.$root.world['Entity'][newValue];
 				this.selectedEntityList = this.$root.world['Entity'][newValue].list;
+				this.showView = '';
+				this.selectedEntityItemKey = '';
 			}
 			if(!this.$root.entityItemIsEdited[this.selectedEntityName]){
 				this.$root.entityItemIsEdited[this.selectedEntityname] = {};
@@ -157,7 +168,22 @@ export default {
 			//showView: 'ATTRIBUTE_CONFIGURATION',
 		}
 	},
+	mounted(){
+			this.world = this.$root.world;
+	},
 	methods: {
+		resetWorld(){
+			if(!confirm("Reset the World!?")) return;
+			console.log("WORLD RESET!");
+
+			this.$root.world =
+			{
+				'Entity': {}
+			};
+			this.world = this.$root.world;
+
+			this.$forceUpdate();
+		},
 		addNewProperty(name){
 			console.log("what is the name: ", name);
 			if (this.world['Entity'][name] !== undefined) {
@@ -165,18 +191,30 @@ export default {
 				return false;
 			}
 
-			this.world['Entity'][name]= '';
+			//this.world['Entity'][name]= '';
+			this.world['Entity'][name]= {
+				templateInfo: {},
+				templateOrder: {},
+				rules: {},
+				list: {},
+				description: ''
+			}
+
 			console.log("WORLD", this.world);
 			this.selectedEntityName = name;
+
+			this.$root.world = this.world;
 		},
 		addPropertyName() {
+		//TODO: WHY DID I DO THIS!?
 			if (this.world['Entity'][this.newPropertyName] !== undefined) {
 				console.log("Entity Exist");
 				return false;
 			}
 
-			this.world['Entity'][this.newPropertyName]= '';
-			console.log("WORLD", this.world);
+			this.world['Entity'][this.newPropertyName] = '';
+
+			console.log("WORLD", JSON.stringify(this.world));
 		},
 		addToEntityList(){
 			let nextKey = Object.keys(this.$root.world['Entity'][this.selectedEntityName].list).length;
@@ -202,6 +240,9 @@ export default {
 			this.selectedEntityItemKey = key;
 			this.showView = 'ENTITY_ITEM';
 		},
+		emptyEntityItem(){
+			this.showView = '';
+		},
 		openArributeModal(){
 			this.AttributeModalVisible = true;
 		},
@@ -216,6 +257,11 @@ export default {
 		changeViewMode(view){
 			console.log("WHAT IS VIEW", view);
 			this.showView = view;
+			this.$forceUpdate();
+		},
+		changeMainViewMode(view){
+			console.log(view);
+			this.showMainView = view;
 		},
 		checkEntityItemEdited(EntityName, ItemName, condition){
 			let ent = this.entityChangeList = this.$root.entityItemIsEdited;
@@ -225,15 +271,29 @@ export default {
 			console.log("NEW LIST", ent);
 			this.$forceUpdate();
 		},
+
+    saveJSON(fileName) {
+			const jsonDataString = JSON.stringify(this.$root.world);
+      const blob = new Blob([jsonDataString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+		},
+
 		refresh(){
 			console.log("REFRESH!");
 			this.$forceUpdate();
-		}
+		},
 	},
 	computed:{
 		entityNames() {
 			//return Object.keys(this.world['Entity']);
-			return Object.keys(this.$root.world['Entity']);
+			return Object.keys(this.world['Entity']);
 		},
 		entityList() {
 		/*
@@ -249,6 +309,9 @@ export default {
 		computedSelectedEntity(){
 				return this.$root.world['Entity'][this.selectedEntityName];
 		},
+		selectedEntityExist() {
+			return Object.prototype.hasOwnProperty.call(this.$root.world['Entity'], this.selectedEntityName);
+		},
 		itemIsBeingEdited(){
 			if(this.entityChangeList){
 				if(this.entityChangeList[this.selectedEntityName]){
@@ -258,6 +321,20 @@ export default {
 			}
 			else return false;
 		},
+		showWorldJSON(){
+		//return this.$root.world;
+		return JSON.stringify(this.$root.world, null, 2);
+			/*
+			try {
+				// Parse the JSON string and stringify it with indentation for formatting
+				return JSON.stringify(JSON.parse(this.$root.world), null, 2);
+			} catch (error) {
+				// Handle parsing errors
+				console.error('Invalid JSON string:', error);
+				return 'Invalid JSON';
+			}
+			*/
+		}
 	},
 }
 </script>
@@ -265,9 +342,9 @@ export default {
 
 <style scoped>
 .nav-bar-grid-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: left; /* Vertically center content */
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	align-items: left; /* Vertically center content */
 }
 
 .fixed-width-and-scroll {
@@ -277,7 +354,7 @@ export default {
 	white-space: nowrap;
 }
 .fixed-width-and-scroll::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
 .container2 {
@@ -334,27 +411,27 @@ export default {
 }
 
 .entity-button {
-  background-color: green;
-  border: none;
-  color: white;
-  padding: 2px 16px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
+	background-color: green;
+	border: none;
+	color: white;
+	padding: 2px 16px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
 	border-radius: 8px;
 }
 
 
 .name-box {
-  border-bottom: 1px solid #000;
-  margin-bottom: 10px;
-  padding: 1px;
-  display: flex;
+	border-bottom: 1px solid #000;
+	margin-bottom: 10px;
+	padding: 1px;
+	display: flex;
 	align-items: center;
-  font-weight: bold;
+	font-weight: bold;
 }
 
 .name-box:hover {
@@ -362,7 +439,7 @@ export default {
 }
 
 .index {
-  font-weight: bold;
+	font-weight: bold;
 	text-align: right;
 	flex: 1;
 
@@ -373,31 +450,31 @@ export default {
 
 .name {
 	margin-left: 10px;
-  flex: 11;
+	flex: 11;
 }
 
 .lined-paper {
-  background-color: #fff;
-  padding: 5px;
-  border: 1px solid #000;
+	background-color: #fff;
+	padding: 5px;
+	border: 1px solid #000;
 	height: 100%; /* Fixed height */
 	overflow-y: auto; /* Enable vertical scrollbar */
 	overflow: hidden;
 }
 
 .lined-paper::-webkit-scrollbar {
-  width: 0; /* Remove scrollbar width */
-  height: 0; /* Remove scrollbar height */
+	width: 0; /* Remove scrollbar width */
+	height: 0; /* Remove scrollbar height */
 }
 
 .lined-paper-index{
 }
 
 .user-input {
-  border-top: 1px solid #000; /* Add border on top to separate from existing content */
-  padding: 10px;
-  display: flex;
-  align-items: center;
+	border-top: 1px solid #000; /* Add border on top to separate from existing content */
+	padding: 10px;
+	display: flex;
+	align-items: center;
 }
 
 
@@ -451,7 +528,7 @@ p{
 
 .better-name-box{
 	height: 25px;
-  display: flex;
+	display: flex;
 }
 .better-name-box:hover{
 	background-color: #d4ebf2;
@@ -460,7 +537,7 @@ p{
 
 
 .better-index {
-  font-weight: bold;
+	font-weight: bold;
 	text-align: center;
 	flex: 2;
 
@@ -473,7 +550,7 @@ p{
 }
 
 .better-name {
-  font-weight: bold;
+	font-weight: bold;
 	margin-left: 15px;
 	margin-top: 7px;
 	flex: 15;

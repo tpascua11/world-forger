@@ -1,6 +1,6 @@
 <template>
   <div class="stack-setup">
-    <div class="title-container border-x1">
+    <div class="title-container">
       <input
           class="entity-item-name"
           placeholder="name..."
@@ -127,6 +127,8 @@
         this.$emit('update-parent', 'Data from child component');
 
         //obj2 = null;
+
+        localStorage.setItem('world', JSON.stringify(this.$root.world));
       },
       preventNonNumericInput(event) {
         // Get the input value

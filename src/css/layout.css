@@ -108,10 +108,40 @@
   /*background-color: #007bff; /* Background color */
 }
 
+.stack-dynamic {
+  flex: 1;
+}
+
 .height100{
 	height: 100%; /* Fixed height */
   overflow-y: auto; /* Enable vertical scrollbar */
 }
+
+.height90{
+	height: 90%; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.height80{
+	height: 80%; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.height20{
+	height: 20%; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.height10{
+	height: 10%; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.height-dynamic{
+  flex: 1;
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
 
 .heightFixed{
   background-color: gold; /* Background color */
@@ -121,6 +151,12 @@
 
 .stack-overflow {
 	height: 100%; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.stack-fullflow {
+	height: 95%; /* Fixed height */
+  width: 100%;
   overflow-y: auto; /* Enable vertical scrollbar */
 }
 
@@ -184,6 +220,10 @@
   /*background-color: lightgreen; /* Just for visualization */
 }
 
+.c100{
+  flex: 1
+}
+
 .border-x1 {
   border: 1px solid black;
 }
@@ -192,8 +232,44 @@
   border: 2px solid black;
 }
 
+.smile-x1{
+  border-left:   1px solid black;   /* Outline on the left side */
+  border-right:  1px solid black;  /* Outline on the right side */
+  border-bottom: 1px solid black; /* Outline on the bottom side */
+}
+
+.smile-x2{
+  border-left:   2px solid black;   /* Outline on the left side */
+  border-right:  2px solid black;  /* Outline on the right side */
+  border-bottom: 2px solid black; /* Outline on the bottom side */
+}
+
+.border-L-x1{
+  border-left:   1px solid black;   /* Outline on the left side */
+  border-bottom: 1px solid black; /* Outline on the bottom side */
+}
+
+.border-reverse-L-x1{
+  border-right:   1px solid black;   /* Outline on the left side */
+  border-bottom: 1px solid black; /* Outline on the bottom side */
+}
+
+.border-down-x1 {
+  border-bottom: 1px solid black; /* Outline on the bottom side */
+}
+
+.border-down-x2 {
+  border-bottom: 2px solid black; /* Outline on the bottom side */
+}
+
+
 .border-top-x2 {
   border-top: 2px solid #000; /* Adjust thickness and color as needed */
+}
+
+
+.simple-center{
+  padding: 10px;
 }
 
 

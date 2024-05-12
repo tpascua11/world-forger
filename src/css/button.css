@@ -91,23 +91,46 @@
 .yellow-button{
 	font-family: "Neucha";
 	font-size: 17px;
-  background-color: #e4bd67; /* Blue color */
-  color: white; /* Text color */
-  padding: 10px 20px; /* Padding for the button */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Cursor style */
-  text-align: center; /* Center the text */
-  text-decoration: none; /* Remove default link decoration */
-  display: inline-block; /* Make it behave as a block element */
+  background-color: #e4bd67;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block; 
 }
 
 /* Hover effect */
 .yellow-button:hover {
 	font-family: "Neucha";
   font-weight: bold;
-  background-color: #d8a126; /* Darker shade of blue */
+  background-color: #d8a126; 
 }
+
+/*YELLOW */
+.white-button{
+	font-family: "Neucha";
+	font-size: 17px;
+  background-color: #FDF8EB;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* Hover effect */
+.white-button:hover {
+	font-family: "Neucha";
+  font-weight: bold;
+  background-color:  #CAC6BC;
+}
+
 
 .is-selected {
 	background-color: #dcf2d4 !important;

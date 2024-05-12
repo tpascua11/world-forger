@@ -1,7 +1,7 @@
 <template>
   <div class="stack-setup">
     <!--<div class="stack stack05 border-top-x2"> -->
-    <div class="stack stackFixed40 border-top-x2">
+    <div class="stack stackFixed40">
       <div class="base-format">
         <div class="title-container">
           <h2> Attribute Configuration </h2>
@@ -38,7 +38,7 @@
               <td v-if="referenceEntity[row]">{{ referenceEntity[row]['listType']}} </td>
 
               <td>
-                <button class="red-button save-button fit-button-small" 
+                <button v-if="row != 'name'" class="red-button save-button fit-button-small" 
                 @click="removeAttribute(row)"> remove </button>
               </td>
             </tr>
@@ -75,7 +75,9 @@
               <td>{{ template[row]['referenceTo'] }}</td>
               <td>{{ template[row]['listType'] }}</td>
               <td>
-                <button class="red-button save-button fit-button" > remove </button>
+                <!--
+                  <button class="red-button save-button fit-button" > remove </button>
+                  -->
               </td>
             </tr>
             <tr class="empty-height" v-for="index in 10" :key="index">
@@ -202,6 +204,11 @@ import VueMultiselect from 'vue-multiselect'
 				});
       },
       add(){
+        if(this.inputValue === 'name'){
+          window.alert("Name is defaulted and fixed");
+          return false;
+        }
+
         if(!this.template[this.inputValue]){
           this.template[this.inputValue] = {
             "name": this.inputValue,
@@ -211,8 +218,16 @@ import VueMultiselect from 'vue-multiselect'
           };
         }
       },
+      addToRemoveList(name){
+        name;
+      },
       removeAttribute(name){
-        console.log("remove attribute", name);
+        if(name === 'name'){
+          window.alert("Name is defaulted and fixed");
+          return false;
+        }
+        if (!confirm(`Removing property '${name}'. Do you wish to continue?`)) return false;
+
         if (this.referenceEntity && typeof this.referenceEntity === 'object') {
           if (name in this.referenceEntity) {
             delete this.referenceEntity[name];
@@ -227,6 +242,11 @@ import VueMultiselect from 'vue-multiselect'
       },
       saveToWorld(){
         console.log("Save This Template", this.template);
+        console.log("See The Reference", this.referenceEntity);
+        if(!this.referenceEntity){
+          window.alert("Reference Entity is Empty!");
+          return false;
+        }
         for (let key in this.template) {
           this.referenceEntity[key] = this.template[key];
         }
@@ -234,6 +254,8 @@ import VueMultiselect from 'vue-multiselect'
         console.log("SEE REFERENCE", JSON.stringify(this.$root.world));
         this.template = {};
         this.$root.entityTemplate[this.entityName] = {};
+
+        localStorage.setItem('world', JSON.stringify(this.$root.world));
       },
       refresh(){
         this.$forceUpdate();
