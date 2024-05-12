@@ -222,6 +222,7 @@ import VueMultiselect from 'vue-multiselect'
         name;
       },
       removeAttribute(name){
+        console.log("NAME!?", name);
         if(name === 'name'){
           window.alert("Name is defaulted and fixed");
           return false;
@@ -238,6 +239,7 @@ import VueMultiselect from 'vue-multiselect'
         } else {
           console.log("Invalid reference entity or reference entity is not an object.");
         }
+        this.$emit('deleteAttribute', name);
         this.refresh();
       },
       saveToWorld(){

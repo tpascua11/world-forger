@@ -83,6 +83,7 @@
 				<AttributeConfiguration
 					:entityName="selectedEntityName"
 					@updateAttribute="updateEntityAttribute"
+					@deleteAttribute="deleteAttributeFromEntityList"
 					/>
 			</div>
 			<div v-else-if="showView === 'ENTITY_ITEM'" class="c80 smile-x1">
@@ -125,12 +126,13 @@ export default {
 	watch: {
 		selectedEntityName(newValue){
 			console.log("SELECTED NEW VALUE", newValue);
-			if(this.$root.world['Entity'][newValue]){
-				console.log("SELECTED ENTITY", this.$root.world['Entity'][newValue]);
-				this.selectedEntity = this.$root.world['Entity'][newValue];
-				this.selectedEntityList = this.$root.world['Entity'][newValue].list;
+			if(this.world['Entity'][newValue]){
+				console.log("SELECTED ENTITY", this.world['Entity'][newValue]);
+				this.selectedEntity = this.world['Entity'][newValue];
+				this.selectedEntityList = this.world['Entity'][newValue].list;
 				this.showView = '';
 				this.selectedEntityItemKey = '';
+				this.$root.world = this.world;
 			}
 			if(!this.$root.entityItemIsEdited[this.selectedEntityName]){
 				this.$root.entityItemIsEdited[this.selectedEntityname] = {};
@@ -193,7 +195,12 @@ export default {
 
 			//this.world['Entity'][name]= '';
 			this.world['Entity'][name]= {
-				templateInfo: {},
+				templateInfo: {
+					'name': {
+						type: 'string',
+						important: true,
+					}
+				},
 				templateOrder: {},
 				rules: {},
 				list: {},
@@ -217,23 +224,55 @@ export default {
 			console.log("WORLD", JSON.stringify(this.world));
 		},
 		addToEntityList(){
-			let nextKey = Object.keys(this.$root.world['Entity'][this.selectedEntityName].list).length;
+			let nextKey = Object.keys(this.world['Entity'][this.selectedEntityName].list).length;
 			console.log("next key", nextKey);
-			this.selectedEntityList[nextKey] = {};
+			this.selectedEntityList[nextKey] = this.setDefaultEntityValues();
+
+			this.$root.world = this.world;
+		},
+		setDefaultEntityValues(){
+			let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
+			let newObject = {};
+			console.log(" what is template info", JSON.stringify(templateInfo));
+			for (let key in templateInfo) {
+					if(templateInfo[key].type === 'number'){
+						newObject[key] = 0;
+					}
+					else{
+						newObject[key]= '';
+					}
+			}
+			console.log("NEW OBJECT!", newObject);
+			return newObject;
 		},
 		updateEntityAttribute(entityName, attribute){
 			console.log("TEST UPDATES");
 			console.log("Entity", JSON.stringify(entityName));
 			console.log("Attribute", JSON.stringify(attribute));
 
-			console.log("THIS WORLD", JSON.stringify(this.$root.world['Entity'][entityName]));
+			console.log("THIS WORLD", JSON.stringify(this.world['Entity'][entityName]));
 			for (let key in attribute) {
-				this.$root.world['Entity'][entityName][key] = attribute[key];
+				this.world['Entity'][entityName][key] = attribute[key];
 			}
 
-			this.selectedEntity = this.$root.world['Entity'][entityName];
+			this.$root.world = this.world;
+			this.selectedEntity = this.world['Entity'][entityName];
 			//Vue.set(this, 'selectedEntity', this.$root.world['Entity'][entityName]);
 			//this.$set(this, 'selectedEntity', this.$root.world['Entity'][entityName]);
+		},
+		deleteAttributeFromEntityList(attributeName){
+			console.log("name of attribute to remove", attributeName);
+			for (let key in this.entityList){
+				//console.log("SEE THIS",  this.world['Entity'][this.selectedEntityName].list[key][attributeName]);
+				delete this.world['Entity'][this.selectedEntityName].list[key][attributeName];
+				//delete this.entityList[key][attributeName];
+			}
+
+			this.$root.world = this.world;
+		},
+		refreshEntityAttributeList(){
+		//TODO: TEMPLATE INFO REFERSH
+		//clean up values based on ttemplateInfo on list	
 		},
 		selectEntityItem(key){
 			console.log("KEY", key);
@@ -307,10 +346,10 @@ export default {
 			else return [];
 		},
 		computedSelectedEntity(){
-				return this.$root.world['Entity'][this.selectedEntityName];
+				return this.world['Entity'][this.selectedEntityName];
 		},
 		selectedEntityExist() {
-			return Object.prototype.hasOwnProperty.call(this.$root.world['Entity'], this.selectedEntityName);
+			return Object.prototype.hasOwnProperty.call(this.world['Entity'], this.selectedEntityName);
 		},
 		itemIsBeingEdited(){
 			if(this.entityChangeList){
