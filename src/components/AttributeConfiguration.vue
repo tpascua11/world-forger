@@ -258,6 +258,8 @@ import VueMultiselect from 'vue-multiselect'
         this.$root.entityTemplate[this.entityName] = {};
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));
+
+        this.$emit('updateAttribute');
       },
       refresh(){
         this.$forceUpdate();

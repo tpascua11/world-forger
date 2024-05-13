@@ -28,43 +28,53 @@
 
       this.$root.world = {
 				'Entity': {
-					'Template Fire': {
+					'Items': {
             templateInfo: {
               'name': {
                 type: 'string',
                 important: true
               },
-              'power': {
+              'cost': {
                 type: 'number',
               },
-              'love':{
-                type: 'number',
-              }
+              'description': {
+                type: 'string',
+              },
             },
             templateOrder: [],
             rules: {},
             list: {
-              0: {name: 'Flamer', power: 10, coolnessFactorAndPowerUps: 10000,
-                tower: '10', health: 0, mana: 0, stamina: 0, love: 9},
-              1: {name: 'Fire', power: 20  , },
+              0: {name: 'Milk',    cost: 5 , description: 'Fresh 2 weeks'},
+              1: {name: 'Juice',   cost: 5 , description: 'cold'},
+              2: {name: 'Corn',    cost: 2 , description: 'on sale'},
+              3: {name: 'Apple',   cost: 1 , description: 'on sale'},
+              4: {name: 'Orange',  cost: 1 , description: 'on sale'},
+              5: {name: 'Steak',   cost: 10, description: 'fresh cut'},
+              6: {name: 'Pork',    cost: 12, description: 'fresh cut'},
             },
             description: '',
           },
-					'Template Ice': {
+					'Store': {
             templateInfo: {
               'name': {
                 type: 'string',
                 important: true
               },
-              'attribute 1': {
+              'x-cord': {
                 type: 'number',
-                referenceTo: 'test1',
-                listType: 'test2',
-              }
+              },
+              'y-cord': {
+                type: 'number',
+              },
+              'description': {
+                type: 'string'
+              },
             },
             templateOrder: [],
             rules: {},
-            list: {},
+            list: {
+              0: {name: 'Average Store', 'x-cord': 10, 'y-cord': 10, description: 'basic store stuff'}
+            },
             description: '',
           },
 

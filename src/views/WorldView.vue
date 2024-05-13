@@ -82,7 +82,7 @@
 			<div v-if="(showView === 'ATTRIBUTE_CONFIGURATION') && selectedEntityExist" class="c80 smile-x1">
 				<AttributeConfiguration
 					:entityName="selectedEntityName"
-					@updateAttribute="updateEntityAttribute"
+					@updateAttribute="refreshEntityAttributeList"
 					@deleteAttribute="deleteAttributeFromEntityList"
 					/>
 			</div>
@@ -263,16 +263,39 @@ export default {
 		deleteAttributeFromEntityList(attributeName){
 			console.log("name of attribute to remove", attributeName);
 			for (let key in this.entityList){
-				//console.log("SEE THIS",  this.world['Entity'][this.selectedEntityName].list[key][attributeName]);
 				delete this.world['Entity'][this.selectedEntityName].list[key][attributeName];
-				//delete this.entityList[key][attributeName];
 			}
-
-			this.$root.world = this.world;
+			this.refreshEntityAttributeList();
 		},
 		refreshEntityAttributeList(){
-		//TODO: TEMPLATE INFO REFERSH
-		//clean up values based on ttemplateInfo on list	
+			console.log("REFESH ATTRIBUE LIST");
+			for (let key1 in this.entityList){
+				let item = this.world['Entity'][this.selectedEntityName].list[key1];
+				let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
+				let newItem = {};
+				key1; item; newItem;
+
+
+				for(let prop in templateInfo){
+
+					//Default the numbers if not exist
+					if (item[prop] === undefined) {
+						if(templateInfo[prop].type === 'number'){
+							newItem[prop] = 0;
+						}
+						else {
+							newItem[prop] = '';
+						}
+					}
+					else {
+						newItem[prop] = item[prop];
+					}
+
+					this.world['Entity'][this.selectedEntityName].list[key1] = newItem;
+				}
+
+			}
+			this.$root.world = this.world;
 		},
 		selectEntityItem(key){
 			console.log("KEY", key);
