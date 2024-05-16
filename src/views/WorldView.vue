@@ -16,7 +16,7 @@
 								v-model="selectedEntityName"
 								:options="entityNames"
 								:taggable="true"
-								@tag="addNewProperty"
+								@tag="addNewPropertyToEntity"
 								tag-placeholder="Add this as new tag"
 								placeholder="Select or Add Property..."
 								ref="multiselect"
@@ -82,7 +82,7 @@
 			<div v-if="(showView === 'ATTRIBUTE_CONFIGURATION') && selectedEntityExist" class="c80 smile-x1">
 				<AttributeConfiguration
 					:entityName="selectedEntityName"
-					@updateAttribute="refreshEntityAttributeList"
+					@updateAttribute="updateWorldEntity"
 					@deleteAttribute="deleteAttributeFromEntityList"
 					/>
 			</div>
@@ -177,23 +177,19 @@ export default {
 		resetWorld(){
 			if(!confirm("Reset the World!?")) return;
 			console.log("WORLD RESET!");
+			this.$root.world = { 'Entity': {} };
 
-			this.$root.world =
-			{
-				'Entity': {}
-			};
 			this.world = this.$root.world;
-
 			this.$forceUpdate();
 		},
-		addNewProperty(name){
-			console.log("what is the name: ", name);
+
+		addNewPropertyToEntity(name){
+			console.log("Adding New Entity Property ", name);
 			if (this.world['Entity'][name] !== undefined) {
 				console.log("Entity Exist");
 				return false;
 			}
 
-			//this.world['Entity'][name]= '';
 			this.world['Entity'][name]= {
 				templateInfo: {
 					'name': {
@@ -206,23 +202,11 @@ export default {
 				list: {},
 				description: ''
 			}
-
-			console.log("WORLD", this.world);
 			this.selectedEntityName = name;
 
 			this.$root.world = this.world;
 		},
-		addPropertyName() {
-		//TODO: WHY DID I DO THIS!?
-			if (this.world['Entity'][this.newPropertyName] !== undefined) {
-				console.log("Entity Exist");
-				return false;
-			}
 
-			this.world['Entity'][this.newPropertyName] = '';
-
-			console.log("WORLD", JSON.stringify(this.world));
-		},
 		addToEntityList(){
 			let nextKey = Object.keys(this.world['Entity'][this.selectedEntityName].list).length;
 			console.log("next key", nextKey);
@@ -230,6 +214,7 @@ export default {
 
 			this.$root.world = this.world;
 		},
+
 		setDefaultEntityValues(){
 			let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
 			let newObject = {};
@@ -257,14 +242,16 @@ export default {
 
 			this.$root.world = this.world;
 			this.selectedEntity = this.world['Entity'][entityName];
-			//Vue.set(this, 'selectedEntity', this.$root.world['Entity'][entityName]);
-			//this.$set(this, 'selectedEntity', this.$root.world['Entity'][entityName]);
 		},
 		deleteAttributeFromEntityList(attributeName){
 			console.log("name of attribute to remove", attributeName);
 			for (let key in this.entityList){
 				delete this.world['Entity'][this.selectedEntityName].list[key][attributeName];
 			}
+			this.refreshEntityAttributeList();
+		},
+		updateWorldEntity(world){
+			this.world = world;
 			this.refreshEntityAttributeList();
 		},
 		refreshEntityAttributeList(){
@@ -295,6 +282,8 @@ export default {
 				}
 
 			}
+			this.$root.entityItem[this.selectedEntityName] = {};
+
 			this.$root.world = this.world;
 		},
 		selectEntityItem(key){
@@ -332,19 +321,6 @@ export default {
 
 			console.log("NEW LIST", ent);
 			this.$forceUpdate();
-		},
-
-    saveJSON(fileName) {
-			const jsonDataString = JSON.stringify(this.$root.world);
-      const blob = new Blob([jsonDataString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
 		},
 
 		refresh(){

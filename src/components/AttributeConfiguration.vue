@@ -212,7 +212,7 @@ import VueMultiselect from 'vue-multiselect'
         if(!this.template[this.inputValue]){
           this.template[this.inputValue] = {
             "name": this.inputValue,
-            "type": '',
+            "type": 'number',
             "referenceTo": "",
             "listType": "",
           };
@@ -259,7 +259,7 @@ import VueMultiselect from 'vue-multiselect'
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));
 
-        this.$emit('updateAttribute');
+        this.$emit('updateAttribute', this.$root.world);
       },
       refresh(){
         this.$forceUpdate();
