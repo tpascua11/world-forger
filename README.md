@@ -1,29 +1,6 @@
 # world-forger
+Simple Create Data for Apps and modifiy them with customizable rulesets.
 
-## Project setup
-```
-yarn install
-```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Run your unit tests
-```
-yarn test:unit
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+version 0.1 https://new-world-forger.web.app/
+simple application with basic Entity create and list fufill.
