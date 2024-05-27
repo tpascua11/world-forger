@@ -1,6 +1,5 @@
 <template>
   <div class="stack-setup">
-    <!--<div class="stack stack05 border-top-x2"> -->
     <div class="stack stackFixed40">
       <div class="base-format">
         <div class="title-container">
@@ -24,7 +23,6 @@
               <th class="link">Link Reference To</th>
               <th class="listType">List Type</th>
               <th class="remove"> </th>
-
             </tr>
           </thead>
           <tbody class="">
@@ -75,9 +73,6 @@
               <td>{{ template[row]['referenceTo'] }}</td>
               <td>{{ template[row]['listType'] }}</td>
               <td>
-                <!--
-                  <button class="red-button save-button fit-button" > remove </button>
-                  -->
               </td>
             </tr>
             <tr class="empty-height" v-for="index in 10" :key="index">
@@ -135,11 +130,6 @@ import VueMultiselect from 'vue-multiselect'
         if(this.referenceEntity){
           return Object.keys(this.referenceEntity);
         }
-        /*
-        if(this.selectedEntity){
-          return Object.keys(this.selectedEntity);
-        }
-        */
         else return [];
       },
       entityPropertiesLength() {
@@ -292,45 +282,6 @@ import VueMultiselect from 'vue-multiselect'
 
 <style scoped>
 
-table {
-  width: 100%;
-  height: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-}
-
-th.name {
-  width: 30%; /* Adjust the width of the 'Name' column */
-}
-
-th.type {
-  width: 20%; /* Adjust the width of the 'Type' column */
-}
-
-th.link {
-  width: 30%; /* Adjust the width of the 'Link Reference To' column */
-}
-
-th.listType {
-  width: 20%; /* Adjust the width of the 'List Type' column */
-}
-
-
-/*tr:nth-child(even) {
-/*  background-color: #f9f9f9;
-/*}
-*/
-
 .base-format{
   margin-left: 10px;
   margin-top: -10px;
@@ -342,12 +293,6 @@ th.listType {
   overflow-y: auto;
 }
 
-th { /* header cell */
-  position: sticky;
-  top: 0;
-  background-color: #F9F8F8;
-}
-
 table {
   height: 100%;
   border-collapse: separate;
@@ -355,10 +300,54 @@ table {
   background-color:  white;
 }
 
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
 th {
   position: sticky;
   top: 0;
   border-bottom: 2px solid black;
+}
+
+thead {
+  height: 50px;
+}
+
+th.order {
+  width: 3%; /* Adjust the width of the 'Name' column */
+}
+
+th.name {
+  width: 15%; /* Adjust the width of the 'Name' column */
+}
+
+th.type {
+  z-index: 60;
+  width: 20%; /* Adjust the width of the 'Type' column */
+}
+
+th.link {
+  width: 20%; /* Adjust the width of the 'Link Reference To' column */
+}
+
+th.listType {
+  width: 20%; /* Adjust the width of the 'List Type' column */
+}
+
+th.remove {
+  width: 10%; /* Adjust the width of the 'List Type' column */
+}
+
+tr{
+  height: 20px;
+}
+
+tr:hover {
+  background-color: lightblue; /* Highlight background on hover */
+  border: 2px solid #000; /* Increase border size on hover */
 }
 
 h2 {
@@ -370,15 +359,13 @@ button {
   width: 30%;
 }
 
-
 .button-container {
   display: flex;
   justify-content: left; /* Horizontally center the buttons */
   align-items: center; /* Vertically center the buttons */
 
   padding: 5px; /* Apply padding of 20 pixels inside the container */
-  gap: 1%; 
-
+  gap: 1%;
 }
 
 .title-container {
@@ -387,16 +374,16 @@ button {
   align-items: center;
 }
 
-  .custom-input {
-    width: 200px;
-    padding: 10px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    font-family: "Neucha";
-    outline: none; /* Remove default focus outline */
-    height: 10px;
-  }
+.custom-input {
+  width: 200px;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: "Neucha";
+  outline: none; /* Remove default focus outline */
+  height: 10px;
+}
 
 .custom-input:focus {
   border-color: dodgerblue; /* Change border color on focus */
@@ -415,60 +402,17 @@ button {
   height: 80%;
 }
 
+.empty-height{
+  height: 30px;
+}
 
+.lightblue{
+  background-color: lightblue;
+}
 
-
-
-  thead {
-    height: 50px;
-  }
-
-
-  th.order {
-    width: 3%; /* Adjust the width of the 'Name' column */
-  }
-
-  th.name {
-    width: 15%; /* Adjust the width of the 'Name' column */
-  }
-
-  th.type {
-    z-index: 60;
-    width: 20%; /* Adjust the width of the 'Type' column */
-  }
-
-  th.link {
-    width: 20%; /* Adjust the width of the 'Link Reference To' column */
-  }
-
-  th.listType {
-    width: 20%; /* Adjust the width of the 'List Type' column */
-  }
-
-  th.remove {
-    width: 10%; /* Adjust the width of the 'List Type' column */
-  }
-
-  tr{
-    height: 20px;
-  }
-
-  tr:hover {
-    background-color: lightblue; /* Highlight background on hover */
-    border: 2px solid #000; /* Increase border size on hover */
-  }
-
-  .empty-height{
-    height: 30px;
-  }
-  .lightblue{
-    background-color: lightblue;
-  }
-  .yellow{
-    background-color: #fbfae6;
-  }
-
-
+.yellow{
+  background-color: #fbfae6;
+}
 
 </style>
 

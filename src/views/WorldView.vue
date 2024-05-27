@@ -103,13 +103,11 @@
 			<WorldConfiguration @resetWorld="resetWorld"/>
 		</div>
 
-		<Attribute :visible="AttributeModalVisible" @close="closeAttributeModal"/>
 	</div>
 </template>
 
 <script>
 import VueMultiselect from 'vue-multiselect'
-import Attribute from '@/bigComponents/Attribute.vue'
 import AttributeConfiguration from '@/components/AttributeConfiguration.vue'
 import WorldConfiguration from '@/components/WorldConfiguration.vue'
 import EntityItem from '@/components/EntityItem.vue'
@@ -118,7 +116,6 @@ export default {
 	name: 'WorldView',
 	components: {
 		VueMultiselect,
-		Attribute,
 		AttributeConfiguration,
 		WorldConfiguration,
 		EntityItem,
@@ -141,33 +138,18 @@ export default {
 	},
 	data: function() {
 		return {
-			world: {
-				'Entity': {
-					'Template1': {test: 123},
-					'Template2': {},
-				},
-			},
-			listOfNames:  [
-				'Apple', 'Banna', 'Carrots', 'Meats', 'Flowers', 'Power', 'Tacos 3000',
-				'Apple', 'Banna', 'Carrots', 'Meats', 'Flowers', 'Power', 'Tacos 3000',
-				'Apple', 'Banna', 'Carrots', 'Meats', 'Flowers', 'Power', 'Tacos 3000',
-				'Apple', 'Banna', 'Carrots', 'Meats', 'Flowers', 'Power', 'Tacos 3000',
-			],
-			newPropertyName: '',
-			propertyNames: {} ,
-			list: ['apple', 'orage', 'gatorade'],
+			world: { 'Entity': { } },
+
 			selectedEntity: {},
 			selectedEntityList: {},
 			selectedEntityName: '',
-
 			selectedEntityItem: {},
 			selectedEntityItemKey: '',
-			test: '',
+
+			entityChangeList: {},
 			AttributeModalVisible: false,
 			showMainView: 'ENTITY',
 			showView: '',
-			entityChangeList: {},
-			//showView: 'ATTRIBUTE_CONFIGURATION',
 		}
 	},
 	mounted(){
@@ -178,7 +160,6 @@ export default {
 			if(!confirm("Reset the World!?")) return;
 			console.log("WORLD RESET!");
 			this.$root.world = { 'Entity': {} };
-
 			this.world = this.$root.world;
 			this.$forceUpdate();
 		},
@@ -218,7 +199,6 @@ export default {
 		setDefaultEntityValues(){
 			let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
 			let newObject = {};
-			console.log(" what is template info", JSON.stringify(templateInfo));
 			for (let key in templateInfo) {
 					if(templateInfo[key].type === 'number'){
 						newObject[key] = 0;
@@ -227,7 +207,6 @@ export default {
 						newObject[key]= '';
 					}
 			}
-			console.log("NEW OBJECT!", newObject);
 			return newObject;
 		},
 		updateEntityAttribute(entityName, attribute){
@@ -243,6 +222,7 @@ export default {
 			this.$root.world = this.world;
 			this.selectedEntity = this.world['Entity'][entityName];
 		},
+
 		deleteAttributeFromEntityList(attributeName){
 			console.log("name of attribute to remove", attributeName);
 			for (let key in this.entityList){
@@ -334,11 +314,6 @@ export default {
 			return Object.keys(this.world['Entity']);
 		},
 		entityList() {
-		/*
-			if (this.$root.world?.['Entity']?.[this.selectedEntityName]?.list) {
-				return Object.keys(this.$root.world['Entity'][this.selectedEntityName].list);
-			}
-			*/
 			if (this.$root.world?.['Entity']?.[this.selectedEntityName]?.list) {
 				return Object.keys(this.selectedEntityList);
 			}
@@ -359,20 +334,6 @@ export default {
 			}
 			else return false;
 		},
-		showWorldJSON(){
-		//return this.$root.world;
-		return JSON.stringify(this.$root.world, null, 2);
-			/*
-			try {
-				// Parse the JSON string and stringify it with indentation for formatting
-				return JSON.stringify(JSON.parse(this.$root.world), null, 2);
-			} catch (error) {
-				// Handle parsing errors
-				console.error('Invalid JSON string:', error);
-				return 'Invalid JSON';
-			}
-			*/
-		}
 	},
 }
 </script>
@@ -568,11 +529,11 @@ p{
 	height: 25px;
 	display: flex;
 }
+
 .better-name-box:hover{
 	background-color: #d4ebf2;
 	cursor: pointer;
 }
-
 
 .better-index {
 	font-weight: bold;
