@@ -16,6 +16,8 @@
 </template>
 
 <script>
+    import {useWorldStore } from '@/store/world';
+
   export default {
     name: 'AttributeConfiguration',
     components:{
@@ -24,7 +26,9 @@
     },
     computed:{
       showWorldJSON(){
-        return JSON.stringify(this.$root.world, null, 2);
+        //return JSON.stringify(this.$root.world, null, 2);
+        const world = useWorldStore();
+        return world.getWorld;
       }
     },
     mounted() {

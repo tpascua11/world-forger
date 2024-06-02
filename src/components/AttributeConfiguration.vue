@@ -257,8 +257,11 @@
 
         console.log("SEE REFERENCE", JSON.stringify(this.referenceEntity));
         //console.log("SEE REFERENCE", JSON.stringify(this.$root.world));
+        world.refreshEntityAttributeList(this.entityName);
+
         this.template = {};
         this.$root.entityTemplate[this.entityName] = {};
+        this.$root.entityItem[this.selectedEntityName] = {};
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));
 

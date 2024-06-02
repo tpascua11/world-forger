@@ -94,9 +94,51 @@ export const useWorldStore = defineStore('world', {
       for (let key in template) {
         referenceEntity[key] = template[key];
       }
+    },
+    refreshEntityAttributeList(entityName){
+      let entityList = this.getEntityList(entityName);
+      console.log("WHAT IS ENTITY NAME", entityName);
+      console.log("1. REFERSH!", entityList);
+
+			for (let key1 in entityList){
+        //let item = this.world['Entity'][this.selectedEntityName].list[key1];
+        //let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
+
+        let item = this.getEntityListItem(entityName, key1);
+        let templateInfo = this.getEntityTemplateInfo(entityName);
+				let newItem = {};
+        key1; item; newItem;
+        console.log("Check", item, templateInfo, newItem);
+
+
+				for(let prop in templateInfo){
+
+					//Default the numbers if not exist
+					if (item[prop] === undefined) {
+						if(templateInfo[prop].type === 'number'){
+							newItem[prop] = 0;
+						}
+						else {
+							newItem[prop] = '';
+						}
+					}
+					else {
+						newItem[prop] = item[prop];
+					}
+
+          this.world['Entity'][entityName].list[key1] = newItem;
+				}
+
+      }
+      //this.$root.world = this.world;
+      //this.$root.entityItem[this.selectedEntityName] = {};
+
     }
   },
   getters: {
+    getWorld: (state) => {
+      return state.world;
+    },
     getEntityTypes: (state) => {
 			return Object.keys(state.world['Entity']);
     },
