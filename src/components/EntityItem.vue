@@ -51,6 +51,8 @@
 </template>
 
 <script>
+  import {useWorldStore } from '@/store/world';
+
 	export default {
     name: 'EntityItem',
     mounted(){
@@ -81,8 +83,13 @@
     },
     methods: {
       getEntityItemData(){
+        /*
         this.templateInfo =
           this.$root.world['Entity'][this.entityName].templateInfo;
+         */
+        const world = useWorldStore();
+        world;
+        this.templateInfo = world.getEntityTemplateInfo(this.entityName);
         //let referenceItem =
         console.log("GIVE ME TEMPLATE INFO", JSON.stringify(this.templateInfo));
         //  this.entityItem = this.$root.world['Entity'][this.entityName].list[this.entityItemKey];
@@ -105,27 +112,34 @@
           this.$root.entityItem[this.entityName][this.entityItemKey] =
           this.replaceEntityItem =
             JSON.parse(JSON.stringify(
-              this.$root.world['Entity'][this.entityName].list[this.entityItemKey]));
-
+              //this.$root.world['Entity'][this.entityName].list[this.entityItemKey]
+              world.getEntityListItem(this.entityName, this.entityItemKey)
+            ));
 
         }
 
-        this.currentEntityItem = this.$root.world['Entity'][this.entityName].list[this.entityItemKey];
+        //this.currentEntityItem = this.$root.world['Entity'][this.entityName].list[this.entityItemKey];
+        this.currentEntityItem = world.getEntityListItem(this.entityName, this.entityItemKey);
+
         console.log("REFERENCE ITEM", JSON.stringify(this.replaceEntityItem));
 
       },
       replace(){
+        const world = useWorldStore();
+        world.editEntityListItem(this.entityName, this.entityItemKey,
+          this.replaceEntityItem);
+        /*
         let obj1 = this.currentEntityItem;
         let obj2 = this.replaceEntityItem;
 
         for (let key in this.templateInfo) {
             obj1[key] = obj2[key];
         }
+        */
 
         this.$root.entityItem[this.entityName][this.entityItemKey] = null;
         this.getEntityItemData();
-        this.$emit('update-parent', 'Data from child component');
-
+        //this.$emit('update-parent', 'Data from child component');
         //obj2 = null;
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));

@@ -14,7 +14,7 @@
 						<div class="box-7-8 border-x2">
 							<VueMultiselect
 								v-model="selectedEntityName"
-								:options="entityNames"
+								:options="listOfEntityNames"
 								:taggable="true"
 								@tag="addNewPropertyToEntity"
 								tag-placeholder="Add this as new tag"
@@ -52,7 +52,7 @@
 					</div>
 					<div class="stack stack3 stack-overflow">
 						<div class="better-lined-paper">
-								<div v-for="(index, key) in entityList"
+								<div v-for="(index, key) in getSelectedEntityList"
 											:key="key" class="better-name-box border-x1"
 											@click="selectEntityItem(key)"
 											:class="
@@ -92,6 +92,7 @@
 										@update-parent="refresh"
 										@update-entity-item-list="checkEntityItemEdited"
 										/>
+				{{getSelectedEntityItem}}
 			</div>
 			<div v-else class="c80 border-x2">
 
@@ -107,10 +108,13 @@
 </template>
 
 <script>
+import {useWorldStore } from '@/store/world';
+
 import VueMultiselect from 'vue-multiselect'
 import AttributeConfiguration from '@/components/AttributeConfiguration.vue'
 import WorldConfiguration from '@/components/WorldConfiguration.vue'
 import EntityItem from '@/components/EntityItem.vue'
+
 
 export default {
 	name: 'WorldView',
@@ -120,9 +124,27 @@ export default {
 		WorldConfiguration,
 		EntityItem,
 	},
+	setup(){
+	//	const store = useWorldStore();
+	//	const listOfAllEntitiesNames = store.getAllEntitiesNames;
+	//	listOfAllEntitiesNames;
+
+		return {
+			//entities
+		};
+	},
 	watch: {
 		selectedEntityName(newValue){
 			console.log("SELECTED NEW VALUE", newValue);
+			const world = useWorldStore();
+			if(world.getEntityData(newValue)){
+				console.log("SELECTED ENTITY", world.getEntityData(newValue));
+			}
+
+			if(!this.$root.entityItemIsEdited[this.selectedEntityName]){
+				this.$root.entityItemIsEdited[this.selectedEntityname] = {};
+			}
+			/*
 			if(this.world['Entity'][newValue]){
 				console.log("SELECTED ENTITY", this.world['Entity'][newValue]);
 				this.selectedEntity = this.world['Entity'][newValue];
@@ -131,9 +153,7 @@ export default {
 				this.selectedEntityItemKey = '';
 				this.$root.world = this.world;
 			}
-			if(!this.$root.entityItemIsEdited[this.selectedEntityName]){
-				this.$root.entityItemIsEdited[this.selectedEntityname] = {};
-			}
+	*/
 		}
 	},
 	data: function() {
@@ -153,7 +173,8 @@ export default {
 		}
 	},
 	mounted(){
-			this.world = this.$root.world;
+		this.world = this.$root.world;
+		this.$logger.log('This is a log message');
 	},
 	methods: {
 		resetWorld(){
@@ -165,6 +186,8 @@ export default {
 		},
 
 		addNewPropertyToEntity(name){
+			const store = useWorldStore(); store;
+
 			console.log("Adding New Entity Property ", name);
 			if (this.world['Entity'][name] !== undefined) {
 				console.log("Entity Exist");
@@ -186,15 +209,26 @@ export default {
 			this.selectedEntityName = name;
 
 			this.$root.world = this.world;
+
+			store.addNewEntity(name);
+
 		},
 
 		addToEntityList(){
+			/*
 			let nextKey = Object.keys(this.world['Entity'][this.selectedEntityName].list).length;
 			console.log("next key", nextKey);
 			this.selectedEntityList[nextKey] = this.setDefaultEntityValues();
 
 			this.$root.world = this.world;
+			 */
+			const world = useWorldStore();
+			world.addToEntityList(this.selectedEntityName);
 		},
+
+		addToSelectedEntityList(){
+		},
+
 
 		setDefaultEntityValues(){
 			let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
@@ -309,6 +343,22 @@ export default {
 		},
 	},
 	computed:{
+		listOfEntityNames(){
+			const store = useWorldStore();
+			return store.getEntityTypes;
+		},
+		getSelectedEntityData(){
+			const store = useWorldStore();
+			return store.getEntityData(this.selectedEntityName);
+		},
+		getSelectedEntityList(){
+			const store = useWorldStore();
+			return store.getEntityListKeys(this.selectedEntityName);
+		},
+		getSelectedEntityItem(){
+			const store = useWorldStore();
+			return store.getEntityListItem(this.selectedEntityName, this.selectedEntityItemKey);
+		},
 		entityNames() {
 			//return Object.keys(this.world['Entity']);
 			return Object.keys(this.world['Entity']);
@@ -320,7 +370,9 @@ export default {
 			else return [];
 		},
 		computedSelectedEntity(){
-				return this.world['Entity'][this.selectedEntityName];
+			const store = useWorldStore();
+			return store.getEntityData(this.selectedEntityName);
+				//return this.world['Entity'][this.selectedEntityName];
 		},
 		selectedEntityExist() {
 			return Object.prototype.hasOwnProperty.call(this.world['Entity'], this.selectedEntityName);

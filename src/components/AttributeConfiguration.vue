@@ -100,7 +100,9 @@
 </template>
 
 <script>
-import VueMultiselect from 'vue-multiselect'
+  import VueMultiselect from 'vue-multiselect'
+  import {useWorldStore } from '@/store/world';
+
   export default {
     name: 'AttributeConfiguration',
     components:{
@@ -168,20 +170,24 @@ import VueMultiselect from 'vue-multiselect'
     },
     methods: {
       getAttributeTemplate(){
+        const world = useWorldStore();
+
         console.log("WHAT IS ", this.$root.entityTemplate[this.entityName]);
         if (this.$root.entityTemplate[this.entityName]) {
           console.log("WHAT IS THIS ENTITY", this.entityName);
           this.template = this.$root.entityTemplate[this.entityName];
 
           this.referenceEntity =
-            this.$root.world['Entity'][this.entityName].templateInfo;
+            world.getEntityTemplateInfo(this.entityName);
+            //this.$root.world['Entity'][this.entityName].templateInfo;
         }
         else{
           console.log("WHAT IS THIS ENTITY", this.entityName);
           this.template = this.$root.entityTemplate[this.entityName] = {};
 
           this.referenceEntity =
-            this.$root.world['Entity'][this.entityName].templateInfo;
+            world.getEntityTemplateInfo(this.entityName);
+            //this.$root.world['Entity'][this.entityName].templateInfo;
         }
       },
 			onOpen() {
@@ -233,23 +239,30 @@ import VueMultiselect from 'vue-multiselect'
         this.refresh();
       },
       saveToWorld(){
+        const world = useWorldStore();
+
         console.log("Save This Template", this.template);
         console.log("See The Reference", this.referenceEntity);
+
         if(!this.referenceEntity){
           window.alert("Reference Entity is Empty!");
           return false;
         }
+        /*
         for (let key in this.template) {
           this.referenceEntity[key] = this.template[key];
         }
+         */
+        world.editEntityTemplateInfo(this.entityName, this.template);
+
         console.log("SEE REFERENCE", JSON.stringify(this.referenceEntity));
-        console.log("SEE REFERENCE", JSON.stringify(this.$root.world));
+        //console.log("SEE REFERENCE", JSON.stringify(this.$root.world));
         this.template = {};
         this.$root.entityTemplate[this.entityName] = {};
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));
 
-        this.$emit('updateAttribute', this.$root.world);
+        //this.$emit('updateAttribute', this.$root.world);
       },
       refresh(){
         this.$forceUpdate();
