@@ -101,7 +101,7 @@
 
         //If There is Save Reference Copy It
         if(this.$root.entityItem[this.entityName][this.entityItemKey]){
-          console.log("REFERENCE COPY");
+          console.log("!!!!!!!!!REFERENCE COPY!!!!!!!!!!!");
           this.replaceEntityItem =
             this.$root.entityItem[this.entityName][this.entityItemKey];
         }

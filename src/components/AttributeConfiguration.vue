@@ -171,23 +171,16 @@
     methods: {
       getAttributeTemplate(){
         const world = useWorldStore();
+        console.log("WHAT IS THIS ENTITY", this.entityName);
 
         console.log("WHAT IS ", this.$root.entityTemplate[this.entityName]);
         if (this.$root.entityTemplate[this.entityName]) {
-          console.log("WHAT IS THIS ENTITY", this.entityName);
           this.template = this.$root.entityTemplate[this.entityName];
-
-          this.referenceEntity =
-            world.getEntityTemplateInfo(this.entityName);
-            //this.$root.world['Entity'][this.entityName].templateInfo;
+          this.referenceEntity = world.getEntityTemplateInfo(this.entityName);
         }
         else{
-          console.log("WHAT IS THIS ENTITY", this.entityName);
           this.template = this.$root.entityTemplate[this.entityName] = {};
-
-          this.referenceEntity =
-            world.getEntityTemplateInfo(this.entityName);
-            //this.$root.world['Entity'][this.entityName].templateInfo;
+          this.referenceEntity = world.getEntityTemplateInfo(this.entityName);
         }
       },
 			onOpen() {
@@ -218,54 +211,25 @@
         name;
       },
       removeAttribute(name){
-        console.log("NAME!?", name);
-        if(name === 'name'){
-          window.alert("Name is defaulted and fixed");
-          return false;
-        }
-        if (!confirm(`Removing property '${name}'. Do you wish to continue?`)) return false;
-
-        if (this.referenceEntity && typeof this.referenceEntity === 'object') {
-          if (name in this.referenceEntity) {
-            delete this.referenceEntity[name];
-            console.log(`Attribute '${name}' removed successfully.`);
-          } else {
-            console.log(`Attribute '${name}' does not exist in the object.`);
-          }
-        } else {
-          console.log("Invalid reference entity or reference entity is not an object.");
-        }
-        this.$emit('deleteAttribute', name);
-        this.refresh();
+        console.log("Remove Property: ", name);
+        const world = useWorldStore();
+        world.deleteEntityTemplateInfoProperty(this.entityName, name);
       },
       saveToWorld(){
-        const world = useWorldStore();
-
-        console.log("Save This Template", this.template);
-        console.log("See The Reference", this.referenceEntity);
-
         if(!this.referenceEntity){
           window.alert("Reference Entity is Empty!");
           return false;
         }
-        /*
-        for (let key in this.template) {
-          this.referenceEntity[key] = this.template[key];
-        }
-         */
-        world.editEntityTemplateInfo(this.entityName, this.template);
 
-        console.log("SEE REFERENCE", JSON.stringify(this.referenceEntity));
-        //console.log("SEE REFERENCE", JSON.stringify(this.$root.world));
-        world.refreshEntityAttributeList(this.entityName);
+        const world = useWorldStore();
+        world.editEntityTemplateInfo(this.entityName, this.template);
 
         this.template = {};
         this.$root.entityTemplate[this.entityName] = {};
-        this.$root.entityItem[this.selectedEntityName] = {};
+        this.$root.entityItem[this.entityName] = {};
+        //this.$root.entityItem[this.selectedEntityName] = {};
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));
-
-        //this.$emit('updateAttribute', this.$root.world);
       },
       refresh(){
         this.$forceUpdate();

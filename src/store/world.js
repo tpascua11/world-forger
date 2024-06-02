@@ -25,7 +25,7 @@ export const useWorldStore = defineStore('world', {
           description: '',
         },
         Store: {
-          templateInfo: {
+         templateInfo: {
             name: { type: 'string', important: true },
             'x-cord': { type: 'number' },
             'y-cord': { type: 'number' },
@@ -39,7 +39,9 @@ export const useWorldStore = defineStore('world', {
           description: '',
         }
       }
-    }
+    },
+    entityItemIsEdited: {},
+    entityItem: {},
   }),
   actions: {
     addNewEntity(name) {
@@ -94,6 +96,32 @@ export const useWorldStore = defineStore('world', {
       for (let key in template) {
         referenceEntity[key] = template[key];
       }
+
+      this.refreshEntityAttributeList(entityName);
+    },
+    deleteEntityTemplateInfoProperty(entityName, deletedProp){
+      let referenceEntity = this.getEntityTemplateInfo(entityName);
+      let name = deletedProp;
+
+      console.log("NAME!?", name);
+      if(name === 'name'){
+        window.alert("Name is defaulted and fixed");
+        return false;
+      }
+      if (!confirm(`Removing property '${name}'. Do you wish to continue?`)) return false;
+
+      if (referenceEntity && typeof referenceEntity === 'object') {
+        if (name in referenceEntity) {
+          delete this.world['Entity'][entityName].templateInfo[deletedProp];
+          console.log(`Attribute '${name}' removed successfully.`);
+        } else {
+          console.log(`Attribute '${name}' does not exist in the object.`);
+        }
+      } else {
+        console.log("Invalid reference entity or reference entity is not an object.");
+      }
+
+      this.refreshEntityAttributeList(entityName);
     },
     refreshEntityAttributeList(entityName){
       let entityList = this.getEntityList(entityName);
@@ -105,21 +133,21 @@ export const useWorldStore = defineStore('world', {
         //let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
 
         let item = this.getEntityListItem(entityName, key1);
+        logger.scanObject(item);
         let templateInfo = this.getEntityTemplateInfo(entityName);
 				let newItem = {};
         key1; item; newItem;
-        console.log("Check", item, templateInfo, newItem);
+        //console.log("Check", item, templateInfo, newItem);
 
 
 				for(let prop in templateInfo){
-
 					//Default the numbers if not exist
 					if (item[prop] === undefined) {
 						if(templateInfo[prop].type === 'number'){
-							newItem[prop] = 0;
+							newItem[prop] = 999;
 						}
 						else {
-							newItem[prop] = '';
+							newItem[prop] = 'flowers';
 						}
 					}
 					else {
@@ -133,7 +161,31 @@ export const useWorldStore = defineStore('world', {
       //this.$root.world = this.world;
       //this.$root.entityItem[this.selectedEntityName] = {};
 
-    }
+    },
+    clearEntityItemIsEdited(entityName){
+			if(!this.entityItemIsEdited[entityName]){
+				this.entityItemIsEdited[entityName] = {};
+			}
+    },
+    saveEntityHistory(entityName){
+      //If No MAIN Saved Reference make a new one
+      if(!this.entityItem[entityName]){
+        this.entityItem[entityName] = {};
+      }
+    },
+    resetEntityHistory(entityName){
+      this.entityItem[entityName] = {};
+    },
+    saveEntityItemHistory(entityName, itemKey, copyItem){
+      //entityName; itemKey;
+      this.world['Entity'][entityName][itemKey] = copyItem;
+    },
+    resetEntityItemHistory(entityName, itemKey){
+      this.world['Entity'][entityName][itemKey] = null;
+    },
+
+
+
   },
   getters: {
     getWorld: (state) => {
@@ -160,6 +212,27 @@ export const useWorldStore = defineStore('world', {
     getEntityTemplateInfo: (state) => (entityType) => {
       return state.world.Entity[entityType].templateInfo;
     },
+
+    getEntityItemEdited: (state) => {
+      return state.entityItemIsEdited;
+    },
+    getEntityEdits: (state) => (entityName, entityItemKey) => {
+      let replaceEntityItem = {};
+
+      if(state.entityItem[entityName][entityItemKey]){
+        replaceEntityItem =
+          state.entityItem[entityName][entityItemKey];
+      }
+      else{
+        state.entityItem[entityName][entityItemKey] =
+          replaceEntityItem =
+          JSON.parse(JSON.stringify(
+            state.getEntityListItem(entityName, entityItemKey)
+          ));
+      }
+
+      return replaceEntityItem;
+    }
   }
 });
 

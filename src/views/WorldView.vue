@@ -82,8 +82,6 @@
 			<div v-if="(showView === 'ATTRIBUTE_CONFIGURATION') && selectedEntityExist" class="c80 smile-x1">
 				<AttributeConfiguration
 					:entityName="selectedEntityName"
-					@updateAttribute="updateWorldEntity"
-					@deleteAttribute="deleteAttributeFromEntityList"
 					/>
 			</div>
 			<div v-else-if="showView === 'ENTITY_ITEM'" class="c80 smile-x1">
@@ -124,15 +122,6 @@ export default {
 		WorldConfiguration,
 		EntityItem,
 	},
-	setup(){
-	//	const store = useWorldStore();
-	//	const listOfAllEntitiesNames = store.getAllEntitiesNames;
-	//	listOfAllEntitiesNames;
-
-		return {
-			//entities
-		};
-	},
 	watch: {
 		selectedEntityName(newValue){
 			console.log("SELECTED NEW VALUE", newValue);
@@ -144,16 +133,7 @@ export default {
 			if(!this.$root.entityItemIsEdited[this.selectedEntityName]){
 				this.$root.entityItemIsEdited[this.selectedEntityname] = {};
 			}
-			/*
-			if(this.world['Entity'][newValue]){
-				console.log("SELECTED ENTITY", this.world['Entity'][newValue]);
-				this.selectedEntity = this.world['Entity'][newValue];
-				this.selectedEntityList = this.world['Entity'][newValue].list;
-				this.showView = '';
-				this.selectedEntityItemKey = '';
-				this.$root.world = this.world;
-			}
-	*/
+			world.clearEntityItemIsEdited(this.selectedEntityName);
 		}
 	},
 	data: function() {
@@ -256,50 +236,6 @@ export default {
 			this.$root.world = this.world;
 			this.selectedEntity = this.world['Entity'][entityName];
 		},
-
-		deleteAttributeFromEntityList(attributeName){
-			console.log("name of attribute to remove", attributeName);
-			for (let key in this.entityList){
-				delete this.world['Entity'][this.selectedEntityName].list[key][attributeName];
-			}
-			this.refreshEntityAttributeList();
-		},
-		updateWorldEntity(world){
-			this.world = world;
-			this.refreshEntityAttributeList();
-		},
-		refreshEntityAttributeList(){
-			console.log("REFESH ATTRIBUE LIST");
-			for (let key1 in this.entityList){
-				let item = this.world['Entity'][this.selectedEntityName].list[key1];
-				let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
-				let newItem = {};
-				key1; item; newItem;
-
-
-				for(let prop in templateInfo){
-
-					//Default the numbers if not exist
-					if (item[prop] === undefined) {
-						if(templateInfo[prop].type === 'number'){
-							newItem[prop] = 0;
-						}
-						else {
-							newItem[prop] = '';
-						}
-					}
-					else {
-						newItem[prop] = item[prop];
-					}
-
-					this.world['Entity'][this.selectedEntityName].list[key1] = newItem;
-				}
-
-			}
-			this.$root.entityItem[this.selectedEntityName] = {};
-
-			this.$root.world = this.world;
-		},
 		selectEntityItem(key){
 			console.log("KEY", key);
 			this.selectedEntityItemKey = key;
@@ -332,7 +268,6 @@ export default {
 			let ent = this.entityChangeList = this.$root.entityItemIsEdited;
 			if(!ent[EntityName]) ent[EntityName] = {};
 			ent[EntityName][ItemName] = condition;
-
 			console.log("NEW LIST", ent);
 			this.$forceUpdate();
 		},
