@@ -16,18 +16,6 @@
       </button>
     </div>
     <div class="edit-container">
-      <!--
-      <div class="item-attribute" v-for="(item) in list" :key="item">
-        <div class="item-set">
-          <div class="left">
-            {{item}}
-          </div>
-          <div class="right">
-            <input v-model="replaceEntityItem[item]" class="entity-item-input" type="number" id="username" name="username">
-          </div>
-        </div>
-      </div>
-      -->
       <div class="item-attribute" v-for="(item) in templateList" :key="item">
         <div class="item-set"
           :class="{'is-changed': replaceEntityItem[item] !== currentEntityItem[item]}">
@@ -83,40 +71,18 @@
     },
     methods: {
       getEntityItemData(){
-        /*
-        this.templateInfo =
-          this.$root.world['Entity'][this.entityName].templateInfo;
-         */
         const world = useWorldStore();
         world;
         this.templateInfo = world.getEntityTemplateInfo(this.entityName);
-        //let referenceItem =
         console.log("GIVE ME TEMPLATE INFO", JSON.stringify(this.templateInfo));
-        //  this.entityItem = this.$root.world['Entity'][this.entityName].list[this.entityItemKey];
 
         //If No MAIN Saved Reference make a new one
-        if(!this.$root.entityItem[this.entityName]){
-          this.$root.entityItem[this.entityName] = {};
-        }
+        world.saveEntityHistory(this.entityName);
 
-        //If There is Save Reference Copy It
-        if(this.$root.entityItem[this.entityName][this.entityItemKey]){
-          console.log("!!!!!!!!!REFERENCE COPY!!!!!!!!!!!");
-          this.replaceEntityItem =
-            this.$root.entityItem[this.entityName][this.entityItemKey];
-        }
-        //Else If There is no Save Reference but the REAL entity and item is there
-        else{
-          console.log("REAL COPY");
+        console.log('TEST', world.getEntityEdits(this.entityName,
+          this.entityItemKey));
 
-          this.$root.entityItem[this.entityName][this.entityItemKey] =
-          this.replaceEntityItem =
-            JSON.parse(JSON.stringify(
-              //this.$root.world['Entity'][this.entityName].list[this.entityItemKey]
-              world.getEntityListItem(this.entityName, this.entityItemKey)
-            ));
-
-        }
+        this.replaceEntityItem = world.getEntityEdits(this.entityName, this.entityItemKey);
 
         //this.currentEntityItem = this.$root.world['Entity'][this.entityName].list[this.entityItemKey];
         this.currentEntityItem = world.getEntityListItem(this.entityName, this.entityItemKey);
@@ -128,19 +94,11 @@
         const world = useWorldStore();
         world.editEntityListItem(this.entityName, this.entityItemKey,
           this.replaceEntityItem);
-        /*
-        let obj1 = this.currentEntityItem;
-        let obj2 = this.replaceEntityItem;
 
-        for (let key in this.templateInfo) {
-            obj1[key] = obj2[key];
-        }
-        */
+        //this.$root.entityItem[this.entityName][this.entityItemKey] = null;
+        world.resetEntityItemHistory(this.entityName, this.entityItemKey);
 
-        this.$root.entityItem[this.entityName][this.entityItemKey] = null;
         this.getEntityItemData();
-        //this.$emit('update-parent', 'Data from child component');
-        //obj2 = null;
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));
       },
