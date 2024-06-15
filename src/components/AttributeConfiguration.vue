@@ -167,6 +167,11 @@
         console.log("Entity Change", newValue, oldValue);
         this.getAttributeTemplate();
       },
+      template(newValue){
+        //TODO: directly set to entityTemplate of world!
+        const world = useWorldStore();
+        world.setEntityTemplate(this.entityName, newValue);
+      },
     },
     methods: {
       getAttributeTemplate(){
@@ -228,6 +233,8 @@
         this.$root.entityTemplate[this.entityName] = {};
         this.$root.entityItem[this.entityName] = {};
         //this.$root.entityItem[this.selectedEntityName] = {};
+
+        world.resetEntityHistory(this.entityName);
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));
       },

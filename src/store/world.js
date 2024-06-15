@@ -40,8 +40,14 @@ export const useWorldStore = defineStore('world', {
         }
       }
     },
+    templateInfoType:  [
+      'string', 'number', 'boolean', 'current_and_max',
+      'script_list', 'resource', 'table', 'table_list',
+      'image_url'
+    ],
     entityItemIsEdited: {},
     entityItem: {},
+    entityTemplate: {},
   }),
   actions: {
     addNewEntity(name) {
@@ -69,7 +75,16 @@ export const useWorldStore = defineStore('world', {
       let newObject = {};
       for (let key in templateInfo) {
         if(templateInfo[key].type === 'number'){
-          newObject[key] = 9999;
+          newObject[key] = 0;
+        }
+        else if(templateInfo[key].type === 'currentAndMax'){
+          newObject[key] = {current: 0, max: 0};
+        }
+        else if(templateInfo[key].type === 'boolean'){
+          newObject[key] = false;
+        }
+        else if(templateInfo[key].type === 'image_url'){
+          newObject[key] = '';
         }
         else{
           newObject[key]= '';
@@ -162,6 +177,7 @@ export const useWorldStore = defineStore('world', {
       //this.$root.entityItem[this.selectedEntityName] = {};
 
     },
+
     clearEntityItemIsEdited(entityName){
 			if(!this.entityItemIsEdited[entityName]){
 				this.entityItemIsEdited[entityName] = {};
@@ -173,9 +189,6 @@ export const useWorldStore = defineStore('world', {
         this.entityItem[entityName] = {};
       }
     },
-    resetEntityHistory(entityName){
-      this.entityItem[entityName] = {};
-    },
     saveEntityItemHistory(entityName, itemKey, copyItem){
       //entityName; itemKey;
       this.world['Entity'][entityName][itemKey] = copyItem;
@@ -184,8 +197,16 @@ export const useWorldStore = defineStore('world', {
       this.world['Entity'][entityName][itemKey] = null;
     },
 
-
-
+    saveEntityTemplateHistory(entityName){
+      entityName;
+    },
+    resetEntityHistory(entityName){
+      this.entityTemplate[entityName] = {};
+      this.entityItem[entityName] = {};
+    },
+    setEntityTemplate(entityName, newTemplate){
+      this.entityTemplate[entityName] = newTemplate;
+    }
   },
   getters: {
     getWorld: (state) => {
@@ -213,6 +234,9 @@ export const useWorldStore = defineStore('world', {
       return state.world.Entity[entityType].templateInfo;
     },
 
+    getEntityTemplate: (state) => {
+      return state.entityTemplate;
+    },
     getEntityItemEdited: (state) => {
       return state.entityItemIsEdited;
     },

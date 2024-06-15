@@ -31,6 +31,11 @@
             <input v-model="replaceEntityItem[item]" class="entity-item-input"
             type="textarea" id="username" name="username">
           </div>
+          <div class="right" v-else-if="templateInfo[item].type === 'image_url'">
+            IMAGE_URL
+            <input v-model="replaceEntityItem[item]" class="entity-item-input"
+            type="textarea" id="username" name="username">
+          </div>
         </div>
       </div>
 
@@ -78,26 +83,17 @@
 
         //If No MAIN Saved Reference make a new one
         world.saveEntityHistory(this.entityName);
-
-        console.log('TEST', world.getEntityEdits(this.entityName,
-          this.entityItemKey));
-
         this.replaceEntityItem = world.getEntityEdits(this.entityName, this.entityItemKey);
-
-        //this.currentEntityItem = this.$root.world['Entity'][this.entityName].list[this.entityItemKey];
         this.currentEntityItem = world.getEntityListItem(this.entityName, this.entityItemKey);
 
         console.log("REFERENCE ITEM", JSON.stringify(this.replaceEntityItem));
-
       },
       replace(){
         const world = useWorldStore();
         world.editEntityListItem(this.entityName, this.entityItemKey,
           this.replaceEntityItem);
 
-        //this.$root.entityItem[this.entityName][this.entityItemKey] = null;
         world.resetEntityItemHistory(this.entityName, this.entityItemKey);
-
         this.getEntityItemData();
 
         localStorage.setItem('world', JSON.stringify(this.$root.world));

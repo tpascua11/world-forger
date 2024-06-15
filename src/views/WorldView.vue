@@ -64,14 +64,6 @@
 										<span class="better-name">{{ computedSelectedEntity.list[index].name}}</span>
 								</div>
 						</div>
-					<!--
-						<div class="lined-paper">
-								<div v-for="(index, key) in entityList" :key="key" class="name-box">
-										<span class="index">{{ key  }}. </span>
-										<span class="name">{{ computedSelectedEntity.list[index].name}}</span>
-								</div>
-						</div>
-						-->
 					</div>
 					<div class="name-box">
 						<button class="green-button fit-width" @click="addToEntityList"> Add {{selectedEntityName}}</button>
@@ -90,7 +82,6 @@
 										@update-parent="refresh"
 										@update-entity-item-list="checkEntityItemEdited"
 										/>
-				{{getSelectedEntityItem}}
 			</div>
 			<div v-else class="c80 border-x2">
 
