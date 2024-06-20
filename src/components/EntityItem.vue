@@ -18,7 +18,13 @@
     <div class="edit-container">
       <div class="item-attribute" v-for="(item) in templateList" :key="item">
         <div class="item-set"
-          :class="{'is-changed': replaceEntityItem[item] !== currentEntityItem[item]}">
+             :class="{'is-changed':
+                           (replaceEntityItem[item] !== currentEntityItem[item] && templateInfo[item].type  !== 'current_and_max')
+                           ||
+                           (replaceEntityItem[item].current !== currentEntityItem[item].current
+                              || replaceEntityItem[item].max     !==
+                              currentEntityItem[item].max)
+                     }">
           <div class="left">
             {{item}}
           </div>
@@ -34,6 +40,14 @@
           <div class="right" v-else-if="templateInfo[item].type === 'image_url'">
             IMAGE_URL
             <input v-model="replaceEntityItem[item]" class="entity-item-input"
+            type="textarea" id="username" name="username">
+          </div>
+          <div class="right"
+               v-else-if="templateInfo[item].type === 'current_and_max'"
+                             >
+            Current: <input v-model="replaceEntityItem[item].current" class="entity-item-input"
+                                                     type="textarea" id="username" name="username">
+            Max: <input v-model="replaceEntityItem[item].max" class="entity-item-input"
             type="textarea" id="username" name="username">
           </div>
         </div>

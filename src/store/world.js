@@ -63,13 +63,23 @@ export const useWorldStore = defineStore('world', {
       logger.scanObjectKeys(this.world.Entity);
     },
     addToEntityList(name){
+      //TODO: THIS DOES NOTHING!
+      console.log("IS THIS USED ANYWHERE ELSE!!!");
+
+      console.log("IS THIS USED ANYWHERE ELSE!!!");
+      console.log("IS THIS USED ANYWHERE ELSE!!!");
+      console.log("IS THIS USED ANYWHERE ELSE!!!");
+      console.log("IS THIS USED ANYWHERE ELSE!!!");
       if(!this.getEntityData(name)) return 0;
       this.world.Entity[name].list;
 
       let nextKey = Object.keys(this.world['Entity'][name].list).length;
       this.world['Entity'][name].list[nextKey] = this.defaultEntity(name);
+      console.log("CHECK SUPER", this.world['Entity'][name].list);
     },
     defaultEntity(name){
+      //TODO: THIS DOES NOTHING!
+      console.log("KKKK", name);
       let templateInfo = this.getEntityTemplateInfo(name);
 
       let newObject = {};
@@ -77,8 +87,8 @@ export const useWorldStore = defineStore('world', {
         if(templateInfo[key].type === 'number'){
           newObject[key] = 0;
         }
-        else if(templateInfo[key].type === 'currentAndMax'){
-          newObject[key] = {current: 0, max: 0};
+        else if(templateInfo[key].type === 'current_and_max'){
+          newObject[key] = {current: 10, max: 100};
         }
         else if(templateInfo[key].type === 'boolean'){
           newObject[key] = false;
@@ -143,27 +153,36 @@ export const useWorldStore = defineStore('world', {
       console.log("WHAT IS ENTITY NAME", entityName);
       console.log("1. REFERSH!", entityList);
 
+
 			for (let key1 in entityList){
         //let item = this.world['Entity'][this.selectedEntityName].list[key1];
         //let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
-
+        //
+        console.log("KEY", key1);
         let item = this.getEntityListItem(entityName, key1);
         logger.scanObject(item);
         let templateInfo = this.getEntityTemplateInfo(entityName);
-				let newItem = {};
+        console.log("? here?");
+        let newItem = {};
         key1; item; newItem;
         //console.log("Check", item, templateInfo, newItem);
 
 
 				for(let prop in templateInfo){
 					//Default the numbers if not exist
-					if (item[prop] === undefined) {
+          if (item[prop] === undefined) {
+            //templateInfo[prop].type;
+            //newItem[prop] = this.defaultEntity(prop);
+            //newItem[prop] = this.defaultEntity(entityName);
+            /*
 						if(templateInfo[prop].type === 'number'){
 							newItem[prop] = 999;
 						}
 						else {
 							newItem[prop] = 'flowers';
-						}
+            }
+            */
+            newItem[prop] = this.entityItemMatch(templateInfo[prop].type);
 					}
 					else {
 						newItem[prop] = item[prop];
@@ -176,6 +195,13 @@ export const useWorldStore = defineStore('world', {
       //this.$root.world = this.world;
       //this.$root.entityItem[this.selectedEntityName] = {};
 
+    },
+
+    entityItemMatch(prop){
+      if(prop === 'number') return 777;
+      else if(prop === 'string') return 'flowers'
+      else if (prop === 'current_and_max') return {current: 0, max: 100}
+      else return '';
     },
 
     clearEntityItemIsEdited(entityName){
@@ -256,6 +282,15 @@ export const useWorldStore = defineStore('world', {
       }
 
       return replaceEntityItem;
+    },
+    checkEntityTemplateInfoExist(entityName, attribute){
+      attribute;
+      if(    (this.getEntityData(entityName))
+          && (this.state.world.Entity[entityName].templateInfo[attribute])
+      ){
+        return true;
+      }
+      else return false;
     }
   }
 });
