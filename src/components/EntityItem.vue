@@ -18,12 +18,7 @@
     <div class="edit-container">
       <div class="item-attribute" v-for="(item) in templateList" :key="item">
         <div class="item-set"
-             :class="{'is-changed':
-                           (replaceEntityItem[item] !== currentEntityItem[item] && templateInfo[item].type  !== 'current_and_max')
-                           ||
-                           (replaceEntityItem[item].current !== currentEntityItem[item].current
-                              || replaceEntityItem[item].max     !==
-                              currentEntityItem[item].max)
+             :class="{'is-changed': itemIsChanged(replaceEntityItem[item], currentEntityItem[item], templateInfo[item].type)
                      }">
           <div class="left">
             {{item}}
@@ -129,6 +124,14 @@
         if (!isNumber && !isControlCharacter) {
           event.preventDefault();
         }
+      },
+      itemIsChanged(newItem, oldItem, type){
+        if(type === 'current_and_max'){
+          if(newItem.current !== oldItem.current || newItem.max !== oldItem.max){
+            return true;
+          }
+        }
+        else return (newItem !== oldItem);
       }
 
     },
@@ -148,12 +151,19 @@
         let obj2 = this.currentEntityItem;
 				// Get the keys of both objects
 				const keys1 = Object.keys(obj1);
-				//const keys2 = Object.keys(obj2);
+        //const keys2 = Object.keys(obj2);
+        console.log("KEYS PELASE", keys1);
 
 				// Iterate through keys and compare values
-				for (let key of keys1) {
-					// If values are not equal, objects are not equal
-					if (obj1[key] !== obj2[key]) {
+        for (let key of keys1) {
+          console.log(key);
+          // If values are not equal, objects are not equal
+          if(typeof obj1[key] === 'object' && obj1[key] !== null){
+            console.log("OBJECTED", obj1[key]);
+            if(obj1[key].current !== obj2[key].current) return false;
+            if(obj1[key].max !== obj2[key].max) return false;
+          }
+					else if (obj1[key] !== obj2[key]) {
 						return false;
 					}
 				}
