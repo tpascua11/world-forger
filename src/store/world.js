@@ -111,7 +111,7 @@ export const useWorldStore = defineStore('world', {
       console.log("OBJ1 ", obj1);
 
       for (let key in this.getEntityTemplateInfo(entityName)) {
-        obj1[key] = obj2[key];
+        obj1[key] = JSON.parse(JSON.stringify(obj2[key]));
       }
     },
     editEntityTemplateInfo(entityName, edits){

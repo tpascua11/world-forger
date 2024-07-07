@@ -82,7 +82,7 @@
               <td> </td>
               <td> </td>
               <td> </td>
-            </tr>
+              </tr>
           </tbody>
         </table>
       </div>
@@ -335,6 +335,10 @@ tr{
 tr:hover {
   background-color: lightblue; /* Highlight background on hover */
   border: 2px solid #000; /* Increase border size on hover */
+}
+
+tr:last-child td {
+    border-bottom: none;
 }
 
 h2 {

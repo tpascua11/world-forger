@@ -33,9 +33,19 @@
             type="textarea" id="username" name="username">
           </div>
           <div class="right" v-else-if="templateInfo[item].type === 'image_url'">
-            IMAGE_URL
-            <input v-model="replaceEntityItem[item]" class="entity-item-input"
-            type="textarea" id="username" name="username">
+            <div v-if="replaceEntityItem[item]" class="image-container">
+              <img
+                 v-if="replaceEntityItem[item]"
+                 :src="replaceEntityItem[item]"
+                 alt="empty..."
+                 class="fixed-size scalable-image"
+                 @load="onImageLoad">
+
+            </div>
+            <p>Image size: {{ imageDimensions.width }}x{{ imageDimensions.height }}</p>
+            <input v-model="replaceEntityItem[item]" 
+                   class="entity-item-input-straight"
+            type="text" id="username" name="username">
           </div>
           <div class="right"
                v-else-if="templateInfo[item].type === 'current_and_max'"
@@ -66,8 +76,10 @@
       },
       same(newValue){
         console.log("SAME", newValue);
+        /*
         this.$emit('update-entity-item-list'
           , this.entityName, this.entityItemKey, !newValue);
+          */
       }
     },
     data: function() {
@@ -77,6 +89,7 @@
         replaceEntityItem: {},
         templateInfo: {},
         currentEntityItem: {},
+        imageDimensions: {height: 0, width: 0},
       }
     },
     props: {
@@ -132,6 +145,13 @@
           }
         }
         else return (newItem !== oldItem);
+      },
+      onImageLoad(event){
+        const img = event.target;
+        this.imageDimensions = {
+          width: img.naturalWidth,
+          height: img.naturalHeight
+        };
       }
 
     },
@@ -152,14 +172,14 @@
 				// Get the keys of both objects
 				const keys1 = Object.keys(obj1);
         //const keys2 = Object.keys(obj2);
-        console.log("KEYS PELASE", keys1);
+        //console.log("KEYS PELASE", keys1);
 
 				// Iterate through keys and compare values
         for (let key of keys1) {
-          console.log(key);
           // If values are not equal, objects are not equal
           if(typeof obj1[key] === 'object' && obj1[key] !== null){
-            console.log("OBJECTED", obj1[key]);
+            //console.log("OBJECTED", obj1[key]);
+            //console.log("OBJECTED", obj2[key]);
             if(obj1[key].current !== obj2[key].current) return false;
             if(obj1[key].max !== obj2[key].max) return false;
           }
@@ -256,6 +276,21 @@
   outline: none;
 }
 
+.entity-item-input-straight{
+  border-style: hidden;
+  font-family: inherit;
+  font-size: 15px;
+  width: 100%;
+	font-weight: bold;
+  border-radius: 3px;
+  background-color: #f5f5f5;
+}
+
+.entity-item-input:focus{
+  outline: none;
+}
+
+
 .item-set{
   display: flex;
   border: 1px solid black;
@@ -280,6 +315,22 @@
 
 	padding: 4px;
 }
+
+.image-container {
+  max-width: 250px;
+  max-height: 250px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.scalable-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
 
 </style>
 
