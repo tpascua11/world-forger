@@ -13,7 +13,74 @@
       </div>
     </div>
     <div class="stack stack9 trueHeight">
-      <div class="trueHeight">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr class="">
+              <th class="order"> Order </th>
+              <th class="name">Attribute </th>
+              <th class="type">Type</th>
+              <th class="link">Link Reference To</th>
+              <th class="listType">List Type</th>
+              <th class="remove"> </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="" v-for="(row,index) in referenceProperties" :key="row.id">
+              <td>
+                {{index}}
+              </td>
+              <td>{{row}}</td>
+              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['type']}} </td>
+              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['referenceTo']}} </td>
+              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['listType']}} </td>
+
+              <td>
+                <button v-if="row != 'name'" class="red-button save-button fit-button-small" 
+                                             @click="removeAttribute(row)"> remove </button>
+              </td>
+            </tr>
+
+            <tr class="yellow" v-for="row in entityProperties" :key="row.id">
+              <td> </td>
+              <td>
+                {{row}}
+              </td>
+              <td>
+                <VueMultiselect
+                    v-model="template[row]['type']"
+                    :options="attributeTypeList"
+                    placeholder="Change Data Type..."
+                    :show-labels="false"
+                    @open="onOpen"
+                    class="attribute-layout"
+                    openDirection="below"
+                    >
+                    <template v-slot:option="{ option }">
+                      <div v-if="typeof option !== 'object'">
+                        <div class="title3">
+                          {{option}}
+                        </div>
+                      </div>
+                      <div v-else>
+                        <div class="title3">
+                          {{option.label}}
+                        </div>
+                      </div>
+                    </template>
+                </VueMultiselect>
+              </td>
+              <td>{{ template[row]['referenceTo'] }}</td>
+              <td>{{ template[row]['listType'] }}</td>
+              <td>
+              </td>
+            </tr>
+
+
+          </tbody>
+        </table>
+      </div>
+      <div v-if="false" class="trueHeight">
         <table>
           <thead>
             <tr class="border-x1">
@@ -75,6 +142,7 @@
               <td>
               </td>
             </tr>
+            <!--
             <tr class="empty-height" v-for="index in 10" :key="index">
               <td> </td>
               <td> </td>
@@ -83,6 +151,7 @@
               <td> </td>
               <td> </td>
               </tr>
+            -->
           </tbody>
         </table>
       </div>
@@ -280,66 +349,6 @@
   overflow-y: auto;
 }
 
-table {
-  height: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background-color:  white;
-}
-
-td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  position: sticky;
-  top: 0;
-  border-bottom: 2px solid black;
-}
-
-thead {
-  height: 50px;
-}
-
-th.order {
-  width: 3%; /* Adjust the width of the 'Name' column */
-}
-
-th.name {
-  width: 15%; /* Adjust the width of the 'Name' column */
-}
-
-th.type {
-  z-index: 60;
-  width: 20%; /* Adjust the width of the 'Type' column */
-}
-
-th.link {
-  width: 20%; /* Adjust the width of the 'Link Reference To' column */
-}
-
-th.listType {
-  width: 20%; /* Adjust the width of the 'List Type' column */
-}
-
-th.remove {
-  width: 10%; /* Adjust the width of the 'List Type' column */
-}
-
-tr{
-  height: 20px;
-}
-
-tr:hover {
-  background-color: lightblue; /* Highlight background on hover */
-  border: 2px solid #000; /* Increase border size on hover */
-}
-
-tr:last-child td {
-    border-bottom: none;
-}
 
 h2 {
   text-decoration: underline;
@@ -403,6 +412,29 @@ button {
 
 .yellow{
   background-color: #fbfae6;
+}
+
+.table-container {
+  width: 97%;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+
+  margin-left: 10px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 </style>

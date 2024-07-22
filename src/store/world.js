@@ -53,7 +53,9 @@ export const useWorldStore = defineStore('world', {
     addNewEntity(name) {
       if(this.world.Entity[name]) return;
         this.world.Entity[name] = {
-          templateInfo: {},
+          templateInfo: {
+            name: {type: 'string', important: true}
+          },
           templateOrder: [],
           rules: {},
           list: {},
@@ -64,11 +66,6 @@ export const useWorldStore = defineStore('world', {
     },
     addToEntityList(name){
       //TODO: THIS DOES NOTHING!
-      console.log("IS THIS USED ANYWHERE ELSE!!!");
-
-      console.log("IS THIS USED ANYWHERE ELSE!!!");
-      console.log("IS THIS USED ANYWHERE ELSE!!!");
-      console.log("IS THIS USED ANYWHERE ELSE!!!");
       console.log("IS THIS USED ANYWHERE ELSE!!!");
       if(!this.getEntityData(name)) return 0;
       this.world.Entity[name].list;
@@ -242,6 +239,10 @@ export const useWorldStore = defineStore('world', {
 			return Object.keys(state.world['Entity']);
     },
     getEntityData: (state) => (entityType) => {
+      return state.world.Entity[entityType];
+    },
+    checkEntityExist: (state) => (entityType) => {
+      console.log("ENTITY TYPE", entityType);
       return state.world.Entity[entityType];
     },
     getEntityList: (state) => (entityType) => {

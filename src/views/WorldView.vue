@@ -159,11 +159,12 @@ export default {
 		addNewPropertyToEntity(name){
 			const store = useWorldStore(); store;
 
+      /*
 			console.log("Adding New Entity Property ", name);
 			if (this.world['Entity'][name] !== undefined) {
 				console.log("Entity Exist");
 				return false;
-			}
+      }
 
 			this.world['Entity'][name]= {
 				templateInfo: {
@@ -177,11 +178,11 @@ export default {
 				list: {},
 				description: ''
 			}
+      */
+      this.$root.world = this.world;
+
+      store.addNewEntity(name);
 			this.selectedEntityName = name;
-
-			this.$root.world = this.world;
-
-			store.addNewEntity(name);
 
 		},
 
@@ -300,8 +301,10 @@ export default {
 			return store.getEntityData(this.selectedEntityName);
 				//return this.world['Entity'][this.selectedEntityName];
 		},
-		selectedEntityExist() {
-			return Object.prototype.hasOwnProperty.call(this.world['Entity'], this.selectedEntityName);
+    selectedEntityExist() {
+      const store = useWorldStore();
+      return store.checkEntityExist(this.selectedEntityName);
+			//return Object.prototype.hasOwnProperty.call(this.world['Entity'], this.selectedEntityName);
 		},
 		itemIsBeingEdited(){
 			if(this.entityChangeList){
