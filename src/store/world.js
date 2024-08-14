@@ -11,7 +11,7 @@ export const useWorldStore = defineStore('world', {
             cost: { type: 'number' },
             description: { type: 'string' },
           },
-          templateOrder: [],
+          templateOrder: ['name', 'cost', 'description'],
           rules: {},
           list: {
             0: { name: 'Milk', cost: 5, description: 'Fresh 2 weeks' },
@@ -111,18 +111,31 @@ export const useWorldStore = defineStore('world', {
         obj1[key] = JSON.parse(JSON.stringify(obj2[key]));
       }
     },
+    addAttributeToEntity(entityName, attributeName, template){
+      template;
+      let referenceEntity = this.getEntityTemplateInfo(entityName);
+      let referenceOrder = this.getEntityTemplateOrder(entityName);
+
+      console.log("CHECK PLEASE", referenceOrder);
+      console.log("NEW ATTRIBUTE ", template);
+      referenceEntity[attributeName] = template;
+
+      referenceOrder.push(attributeName);
+
+      this.refreshEntityAttributeList(entityName);
+    },
     editEntityTemplateInfo(entityName, edits){
-      let template = edits;
       let referenceEntity = this.getEntityTemplateInfo(entityName);
 
-      for (let key in template) {
-        referenceEntity[key] = template[key];
+      for (let key in edits) {
+        referenceEntity[key] = edits[key];
       }
 
       this.refreshEntityAttributeList(entityName);
     },
     deleteEntityTemplateInfoProperty(entityName, deletedProp){
       let referenceEntity = this.getEntityTemplateInfo(entityName);
+      let referenceOrder = this.getEntityTemplateOrder(entityName);
       let name = deletedProp;
 
       console.log("NAME!?", name);
@@ -143,23 +156,29 @@ export const useWorldStore = defineStore('world', {
         console.log("Invalid reference entity or reference entity is not an object.");
       }
 
+      const index = referenceOrder.indexOf(deletedProp);
+      if (index !== -1) {
+        referenceOrder.splice(index, 1);
+      }
+
       this.refreshEntityAttributeList(entityName);
+      console.log("NEW REFERENCE ORDER", referenceOrder);
     },
     refreshEntityAttributeList(entityName){
       let entityList = this.getEntityList(entityName);
       console.log("WHAT IS ENTITY NAME", entityName);
-      console.log("1. REFERSH!", entityList);
+      //console.log("1. REFERSH!", entityList);
 
 
 			for (let key1 in entityList){
         //let item = this.world['Entity'][this.selectedEntityName].list[key1];
         //let templateInfo = this.world['Entity'][this.selectedEntityName].templateInfo;
         //
-        console.log("KEY", key1);
+        // console.log("KEY", key1);
         let item = this.getEntityListItem(entityName, key1);
         logger.scanObject(item);
         let templateInfo = this.getEntityTemplateInfo(entityName);
-        console.log("? here?");
+        //console.log("? here?");
         let newItem = {};
         key1; item; newItem;
         //console.log("Check", item, templateInfo, newItem);
@@ -195,8 +214,8 @@ export const useWorldStore = defineStore('world', {
     },
 
     entityItemMatch(prop){
-      if(prop === 'number') return 777;
-      else if(prop === 'string') return 'flowers'
+      if(prop === 'number') return 0;
+      else if(prop === 'string') return ''
       else if (prop === 'current_and_max') return {current: 0, max: 100}
       else return '';
     },
@@ -229,6 +248,12 @@ export const useWorldStore = defineStore('world', {
     },
     setEntityTemplate(entityName, newTemplate){
       this.entityTemplate[entityName] = newTemplate;
+    },
+    setEntityOrder(entityName, newOrder){
+      this.world['Entity'][entityName].templateOrder = newOrder;
+    },
+    checkAttributeExistInEntity(entityName, entityItem){
+      return this.checkEntityTemplateInfoExist(entityName, entityItem);
     }
   },
   getters: {
@@ -260,6 +285,9 @@ export const useWorldStore = defineStore('world', {
     getEntityTemplateInfo: (state) => (entityType) => {
       return state.world.Entity[entityType].templateInfo;
     },
+    getEntityTemplateOrder: (state) => (entityType) => {
+      return state.world.Entity[entityType].templateOrder;
+    },
 
     getEntityTemplate: (state) => {
       return state.entityTemplate;
@@ -284,10 +312,10 @@ export const useWorldStore = defineStore('world', {
 
       return replaceEntityItem;
     },
-    checkEntityTemplateInfoExist(entityName, attribute){
-      attribute;
-      if(    (this.getEntityData(entityName))
-          && (this.state.world.Entity[entityName].templateInfo[attribute])
+    checkEntityTemplateInfoExist: (state) => (entityName, attribute) => {
+      attribute; state;
+      if(    (state.world.Entity[entityName])
+          && (state.world.Entity[entityName].templateInfo[attribute])
       ){
         return true;
       }

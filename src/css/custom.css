@@ -1,46 +1,32 @@
+.attribute-layout .multiselect__content-wrapper {
+  z-index: 1000;
+  max-height: 300px; /* Adjust as needed */
+  overflow-y: auto;
+
+	position: fixed !important;
+	z-index: 1000;
+	max-height: none !important;
+}
+
 .attribute-layout .multiselect__option {
-  z-index: 500;
-}
-
-.attribute-layout {
-}
-
-.attribute-layout .multiselect__content {
-  background-color: lightblue;
-  border: 1px solid black;
-  border-radius: 4px;
-  z-index: 500;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .attribute-layout .multiselect {
-  height: 20px;
-  min-height: 40px;
+  min-height: 30px;
 }
 
 .attribute-layout .multiselect__single {
-  height: 10px;
-  min-height: 10px;
+  margin-bottom: 0;
+  padding: 0;
 }
 
-.attribute-layout .multiselect__input {
-  height: 10px;
-  min-height: 10px;
+.attribute-layout .multiselect__tags {
+  min-height: 30px;
+  padding: 5px 40px 0 8px;
 }
-
-.attribute-layout .multiselect__current {
-  height: 10px;
-  min-height: 10px;
-}
-
 
 .attribute-layout .multiselect__select {
-
-}
-
-
-.attribute-layout .multiselect__content-wrapper {
-}
-
-
-.attribute-layout {
+  height: 30px;
 }

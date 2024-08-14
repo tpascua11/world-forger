@@ -14,9 +14,10 @@
               >
         Save
       </button>
+      {{templateOrder}}
     </div>
     <div class="edit-container">
-      <div class="item-attribute" v-for="(item) in templateList" :key="item">
+      <div class="item-attribute" v-for="(item) in templateOrder" :key="item">
         <div class="item-set"
              :class="{'is-changed': itemIsChanged(replaceEntityItem[item], currentEntityItem[item], templateInfo[item].type)
                      }">
@@ -88,6 +89,7 @@
         entityItem: {},
         replaceEntityItem: {},
         templateInfo: {},
+        templateOrder: [],
         currentEntityItem: {},
         imageDimensions: {height: 0, width: 0},
       }
@@ -97,6 +99,9 @@
       entityName: String,
     },
     methods: {
+      wtf(what){
+        console.log("what", what);
+      },
       getEntityItemData(){
         const world = useWorldStore();
         world;
@@ -108,7 +113,11 @@
         this.replaceEntityItem = world.getEntityEdits(this.entityName, this.entityItemKey);
         this.currentEntityItem = world.getEntityListItem(this.entityName, this.entityItemKey);
 
+        this.templateOrder = world.getEntityTemplateOrder(this.entityName);
+
         console.log("REFERENCE ITEM", JSON.stringify(this.replaceEntityItem));
+
+
       },
       replace(){
         const world = useWorldStore();
@@ -139,6 +148,9 @@
         }
       },
       itemIsChanged(newItem, oldItem, type){
+        console.log("OLD ITEM", oldItem);
+        console.log("NEW ITEM", newItem);
+        console.log("TYPE ", type);
         if(type === 'current_and_max'){
           if(newItem.current !== oldItem.current || newItem.max !== oldItem.max){
             return true;
@@ -152,8 +164,7 @@
           width: img.naturalWidth,
           height: img.naturalHeight
         };
-      }
-
+      },
     },
     computed:{
       list() {
@@ -165,6 +176,14 @@
       },
       templateList(){
           return Object.keys(this.templateInfo).filter(key => key !== 'name');
+      },
+      templateOrderL(){
+        return Object.keys(this.templateInfo).filter(key => key !== 'name');
+        /*
+        const world = useWorldStore();
+        world;
+        let list = world.getEntityTemplateOrder(this.entityName);
+        return list.filter(item => item !== 'name');*/
       },
       same() {
         let obj1 = this.replaceEntityItem;
