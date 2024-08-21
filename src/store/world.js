@@ -254,7 +254,10 @@ export const useWorldStore = defineStore('world', {
     },
     checkAttributeExistInEntity(entityName, entityItem){
       return this.checkEntityTemplateInfoExist(entityName, entityItem);
-    }
+    },
+    resetWorld(){
+      this.world = {'Entity': {} };
+    },
   },
   getters: {
     getWorld: (state) => {
@@ -280,9 +283,11 @@ export const useWorldStore = defineStore('world', {
       return [];
     },
     getEntityListItem: (state) => (entityType, itemKey) => {
+      if(!state.world.Entity[entityType]) return false;
       return state.world.Entity[entityType].list[itemKey];
     },
     getEntityTemplateInfo: (state) => (entityType) => {
+      if(!state.world.Entity[entityType]) return false;
       return state.world.Entity[entityType].templateInfo;
     },
     getEntityTemplateOrder: (state) => (entityType) => {

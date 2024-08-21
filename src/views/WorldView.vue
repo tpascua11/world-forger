@@ -114,6 +114,12 @@ export default {
 		EntityItem,
 	},
 	watch: {
+		showMainView(){
+			console.log("CHECK!");
+			this.selectedEntityItem = {};
+			this.selectedEntity = {};
+			this.selectedEntityName = '';
+		},
 		selectedEntityName(newValue){
 			console.log("SELECTED NEW VALUE", newValue);
 			const world = useWorldStore();
@@ -149,10 +155,14 @@ export default {
 	},
 	methods: {
 		resetWorld(){
+      const world = useWorldStore();
 			if(!confirm("Reset the World!?")) return;
 			console.log("WORLD RESET!");
 			this.$root.world = { 'Entity': {} };
 			this.world = this.$root.world;
+
+			world.resetWorld();
+
 			this.$forceUpdate();
 		},
 

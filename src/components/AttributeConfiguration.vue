@@ -3,12 +3,14 @@
     <div class="stack stackFixed40">
       <div class="base-format">
         <div class="title-container">
-          <h2> Attribute Configuration </h2>
+					<h2> Attribute Configuration </h2>
+					<!--
           <button class="grey-button save-button"
                   :class="{'yellow-button': entityPropertiesLength}"
                   @click="saveToWorld">
             Save
-          </button>
+						</button>
+						-->
         </div>
       </div>
     </div>
@@ -94,7 +96,7 @@
 					@click="openModal();">
 				Add Atribute
 			</button>
-      <button class="blue-button save-button" @click="refresh"> Add Shared </button>
+      <!-- <button class="blue-button save-button" @click="refresh"> Add Shared </button> -->
       <button class="blue-button save-button" @click="openReorderModal"> Reorder </button>
       </div>
 		</div>
