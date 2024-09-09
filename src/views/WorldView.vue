@@ -93,6 +93,10 @@
 			<WorldConfiguration @resetWorld="resetWorld"/>
 		</div>
 
+		<div v-if="showMainView === 'SHARED_ATTRIBUTE'" class="bottom-row smile-x1">
+			<SharedAttributeConfiguration />
+		</div>
+
 	</div>
 </template>
 
@@ -103,6 +107,7 @@ import VueMultiselect from 'vue-multiselect'
 import AttributeConfiguration from '@/components/AttributeConfiguration.vue'
 import WorldConfiguration from '@/components/WorldConfiguration.vue'
 import EntityItem from '@/components/EntityItem.vue'
+import SharedAttributeConfiguration from '@/components/SharedAttributeConfiguration.vue'
 
 
 export default {
@@ -110,6 +115,7 @@ export default {
 	components: {
 		VueMultiselect,
 		AttributeConfiguration,
+		SharedAttributeConfiguration,
 		WorldConfiguration,
 		EntityItem,
 	},
@@ -119,6 +125,7 @@ export default {
 			this.selectedEntityItem = {};
 			this.selectedEntity = {};
 			this.selectedEntityName = '';
+			this.showView = '';
 		},
 		selectedEntityName(newValue){
 			console.log("SELECTED NEW VALUE", newValue);

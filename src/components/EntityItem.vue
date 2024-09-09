@@ -14,7 +14,6 @@
               >
         Save
       </button>
-      {{templateOrder}}
     </div>
     <div class="edit-container">
       <div class="item-attribute" v-for="(item) in templateOrder" :key="item">

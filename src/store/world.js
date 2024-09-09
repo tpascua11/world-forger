@@ -10,11 +10,12 @@ export const useWorldStore = defineStore('world', {
             name: { type: 'string', important: true },
             cost: { type: 'number' },
             description: { type: 'string' },
+            reference: {type: 'shared_attribute', reference: 0}
           },
           templateOrder: ['name', 'cost', 'description'],
           rules: {},
           list: {
-            0: { name: 'Milk', cost: 5, description: 'Fresh 2 weeks' },
+            0: { name: 'Milkirono', cost: 5, description: 'Fresh 2 weeks' },
             1: { name: 'Juice', cost: 5, description: 'Cold' },
             2: { name: 'Corn', cost: 2, description: 'On sale' },
             3: { name: 'Apple', cost: 1, description: 'On sale' },
@@ -38,6 +39,26 @@ export const useWorldStore = defineStore('world', {
           },
           description: '',
         }
+      },
+      'SharedAttribute': {
+        0: {
+          name: 'stats',
+          attribute: {
+            'health': {type: 'number'},
+            'mana': {type: 'number'},
+            'stamina': {type: 'number'}
+          },
+          order: ['health', 'mana', 'stamina']
+        },
+        1: {
+          name: 'more_stats',
+          attribute: {
+            'strength': {type: 'number'},
+            'wisdom': {type: 'number'},
+            'consitution': {type: 'number'}
+          },
+          order: ['strength', 'wisdom', 'consitution']
+        },
       }
     },
     templateInfoType:  [
@@ -255,8 +276,22 @@ export const useWorldStore = defineStore('world', {
     checkAttributeExistInEntity(entityName, entityItem){
       return this.checkEntityTemplateInfoExist(entityName, entityItem);
     },
+    addSharedAttribute(){
+      let nextKey = Object.keys(this.world['SharedAttribute']).length;
+      this.world['SharedAttribute'][nextKey] = {
+        name: 'new',
+        attribute: {},
+      }
+    },
+    deleteSharedAttributeProperty(sharedAttributeKey, attributeKey){
+      //console.log("CHECK", this.world['SharedAttribute'][sharedAttributeKey].attribute[attributeKey]);
+      delete this.world['SharedAttribute'][sharedAttributeKey].attribute[attributeKey];
+    },
     resetWorld(){
-      this.world = {'Entity': {} };
+      this.world = {
+        'Entity': {},
+        'SharedAttribute': {}
+      };
     },
   },
   getters: {
@@ -291,7 +326,13 @@ export const useWorldStore = defineStore('world', {
       return state.world.Entity[entityType].templateInfo;
     },
     getEntityTemplateOrder: (state) => (entityType) => {
+      if(!state.world.Entity[entityType]) return false;
       return state.world.Entity[entityType].templateOrder;
+    },
+
+    getSharedEntity: (state) => () => {
+      if(!state.world.SharedAttribute) return false;
+      return state.world.SharedAttribute;
     },
 
     getEntityTemplate: (state) => {
