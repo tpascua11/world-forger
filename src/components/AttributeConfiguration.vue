@@ -21,65 +21,39 @@
             <tr class="">
               <th class="order"> Order </th>
               <th class="name">Attribute </th>
-              <th class="type">Type</th>
+							<th class="type">Type</th>
+							<!--
               <th class="link">Link Reference To</th>
-              <th class="listType">List Type</th>
+							<th class="listType">List Type</th>
+							-->
               <th class="remove"> </th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="" v-for="(row,index) in getOrder" :key="row.id">
-              <td>
-                {{index}}
-              </td>
-              <td>{{row}}</td>
-              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['type']}} </td>
-              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['referenceTo']}} </td>
-              <td v-if="referenceEntity[row]">{{ referenceEntity[row]['listType']}} </td>
-
-              <td>
-                <button v-if="row != 'name'" class="red-button save-button fit-button-small" 
-                                             @click="removeAttribute(row)"> remove </button>
-              </td>
-            </tr>
-
-            <tr class="yellow" v-for="row in entityProperties" :key="row.id">
-              <td></td>
-              <td>
-                {{row}}
-              </td>
-							<td>
-                <div v-if="false">
-                <VueMultiselect
-                    v-model="template[row]['type']"
-                    :options="attributeTypeList"
-                    :show-labels="false"
-                    @open="onOpen"
-                    class="attribute-layout"
-                    :appendToBody="true"
-                    >
-                    <template v-slot:option="{ option }">
-                      <div v-if="typeof option !== 'object'">
-                        <div class="title3">
-                          {{option}}
-                        </div>
-                      </div>
-                      <div v-else>
-                        <div class="title3">
-                          {{option.label}}
-                        </div>
-                      </div>
-                    </template>
-                </VueMultiselect>
-                </div>
-              </td>
-              <td>{{ template[row]['referenceTo'] }}</td>
-              <td>{{ template[row]['listType'] }}</td>
-              <td>
-              </td>
-            </tr>
-
-
+					<tbody>
+						<template v-for="(row, index) in getOrder" :key="row.id">
+							<!-- Parent row -->
+							<tr>
+								<td>{{ index }}</td>
+								<td>{{ row}}</td>
+								<td v-if="referenceEntity[row]">{{ referenceEntity[row]['type'] }}</td>
+								<!--
+								<td v-if="referenceEntity[row]">{{ referenceEntity[row]['referenceTo'] }}</td>
+								<td v-if="referenceEntity[row]">{{ referenceEntity[row]['listType'] }}</td>
+								-->
+								<td>
+									<button v-if="row.name != 'name'" class="red-button save-button fit-button-small"
+																										@click="removeAttribute(row.name)">remove</button>
+								</td>
+							</tr>
+							<template v-if="checkSharedAttribute(referenceEntity[row])">
+								<!-- {{getSharedAttributeList(referenceEntity[row])}} -->
+								<tr v-for="(row2) in getSharedAttributeList(referenceEntity[row])" :key="row2.id">
+									<td> </td>
+									<td> {{row2}} </td>
+									<td> {{getSharedAttributeListType(referenceEntity[row], row2)}}</td>
+								</tr>
+							</template>
+						</template>
           </tbody>
         </table>
       </div>
@@ -103,7 +77,7 @@
 
 		<TypeInputModal
 				:isOpen="isModalOpen"
-				:items="attributeTypeList"
+				:items="getAttributeInfoType"
 				@item-selected="selectedItem"
 				@close="closeModal"
 				@add="addAttribute"
@@ -120,7 +94,7 @@
 </template>
 
 <script>
-  import VueMultiselect from 'vue-multiselect'
+  //import VueMultiselect from 'vue-multiselect'
 	import TypeInputModal from '@/inputs/TypeInputModal'
   import ReorderAttributeModal from '@/inputs/ReorderAttributeModal'
   import {useWorldStore } from '@/store/world';
@@ -128,7 +102,7 @@
   export default {
     name: 'AttributeConfiguration',
     components:{
-      VueMultiselect,
+      //VueMultiselect,
 			TypeInputModal,
 			ReorderAttributeModal,
     },
@@ -187,6 +161,10 @@
 			getOrder(){
 				const world = useWorldStore();
 				return world.getEntityTemplateOrder(this.entityName);
+			},
+			getAttributeInfoType(){
+				const world = useWorldStore();
+				return world.getAttributeInfoType;
 			}
     },
     mounted() {
@@ -221,7 +199,24 @@
           this.template = this.$root.entityTemplate[this.entityName] = {};
           this.referenceEntity = world.getEntityTemplateInfo(this.entityName);
         }
-      },
+			},
+			getSharedAttribute(id){
+				const world = useWorldStore();
+				return world.getSharedAttribute(id);
+			},
+			getSharedAttributeList(attribute){
+				let id = attribute['referenceTo'];
+				const world = useWorldStore();
+				//return world.getSharedAttribute(id);
+				let keys = Object.keys(world.getSharedAttribute(id).attribute);
+				return keys;
+				},
+			getSharedAttributeListType(attribute, name){
+				let id = attribute['referenceTo'];
+				const world = useWorldStore();
+				return world.getSharedAttribute(id).attribute[name].type;
+			},
+
 			onOpen() {
 				this.$nextTick(() => {
 					const multiselect = this.$el.querySelector('.multiselect');
@@ -315,6 +310,12 @@
 				world.editEntityTemplateInfo(this.entityName, trueTemplate);
 */
 			},
+			checkSharedAttribute(attribute){
+				if(attribute && attribute['type'] === 'shared_attribute'){
+					return true;
+				}
+				else return false;
+			},
 			reorderAttribute(reorder){
 				const world = useWorldStore();
 				world.setEntityOrder(this.entityName, reorder);
@@ -348,15 +349,8 @@
 				inputValue: '',
 				attributeTest: '',
 				attributeTypeList: [
-					'number',
-					'string',
-					'current_and_max',
-					'boolean',
-					'script_list',
-					'resource',
-					'table',
-					'table_list',
-					'image_url'
+					'string', 'number', 'boolean', 'current_and_max',
+					'script_list', 'image_url', 'reference_entity_list'
 				],
 				isModalOpen: false,
 				isReorderModalOpen: false,

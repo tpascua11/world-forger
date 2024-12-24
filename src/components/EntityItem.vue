@@ -16,10 +16,10 @@
       </button>
     </div>
     <div class="edit-container">
+      <!--TODO: This Contains the Attributes of a Entity, but with Nested Objects too-->
       <div class="item-attribute" v-for="(item) in templateOrder" :key="item">
-        <div class="item-set"
-             :class="{'is-changed': itemIsChanged(replaceEntityItem[item], currentEntityItem[item], templateInfo[item].type)
-                     }">
+        <!-- Main Loop-->
+        <div class="item-set">
           <div class="left">
             {{item}}
           </div>
@@ -43,7 +43,7 @@
 
             </div>
             <p>Image size: {{ imageDimensions.width }}x{{ imageDimensions.height }}</p>
-            <input v-model="replaceEntityItem[item]" 
+            <input v-model="replaceEntityItem[item]"
                    class="entity-item-input-straight"
             type="text" id="username" name="username">
           </div>
@@ -55,9 +55,58 @@
             Max: <input v-model="replaceEntityItem[item].max" class="entity-item-input"
             type="textarea" id="username" name="username">
           </div>
-        </div>
-      </div>
+          <div class="right"
+               v-else-if="templateInfo[item].type === 'list_to_entity'">
+            <div v-for="(row, index) in replaceEntityItem[item]" :key="row">
+              <div>
+                <div v-for="(row2, index2) in templateInfo[item].templateInfo" :key="index2">
+                  {{index2}} {{row2}}
+                  <template v-if="row2.type === 'number'">
+                    <input
+                        type="number"
+                        v-model.lazy="replaceEntityItem[item][index2]" class="entity-item-input"
+                        @input="same"
+                        >
+                  </template>
 
+                  <template v-else-if="row2.type === 'string'">
+                    <input
+                        type="text"
+                        v-model.lazy="replaceEntityItem[item][index2]" class="entity-item-input"
+                        @input="same"
+                        >
+                  </template>
+                </div>
+                </div>
+                <button class="grey-button save-button"
+                        :class="{'yellow-button': !same}"
+                        @click="removeFromList(replaceEntityItem[item], index)"
+                        >
+                       Remove
+                </button>
+              </div>
+              <button class="grey-button save-button"
+                      :class="{'yellow-button': !same}"
+                      @click="addObjectToList(replaceEntityItem[item])"
+                      >
+                      Add
+              </button>
+          </div>
+          <div class="right"
+               v-else-if="templateInfo[item].type === 'entity_list_'">
+          </div>
+          <div class="right" v-else>
+          </div>
+        </div>
+        <div v-if="templateInfo[item].type === 'shared_attribute'">
+        <div class="item-set">
+          <div class="left">
+            {{item}}
+          </div>
+       </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +116,8 @@
 
 	export default {
     name: 'EntityItem',
+    components:{
+    },
     mounted(){
       this.getEntityItemData();
     },
@@ -98,9 +149,6 @@
       entityName: String,
     },
     methods: {
-      wtf(what){
-        console.log("what", what);
-      },
       getEntityItemData(){
         const world = useWorldStore();
         world;
@@ -147,9 +195,9 @@
         }
       },
       itemIsChanged(newItem, oldItem, type){
-        console.log("OLD ITEM", oldItem);
-        console.log("NEW ITEM", newItem);
-        console.log("TYPE ", type);
+        //console.log("OLD ITEM", oldItem);
+        //console.log("NEW ITEM", newItem);
+        //console.log("TYPE ", type);
         if(type === 'current_and_max'){
           if(newItem.current !== oldItem.current || newItem.max !== oldItem.max){
             return true;
@@ -164,6 +212,14 @@
           height: img.naturalHeight
         };
       },
+      addObjectToList(list) {
+        list.push({});
+      },
+      removeFromList(array, index) {
+        if (index >= 0 && index < array.length) {
+          array.splice(index, 1);
+        }
+      }
     },
     computed:{
       list() {
@@ -190,7 +246,7 @@
 				// Get the keys of both objects
 				const keys1 = Object.keys(obj1);
         //const keys2 = Object.keys(obj2);
-        //console.log("KEYS PELASE", keys1);
+        console.log("KEYS PELASE", keys1);
 
 				// Iterate through keys and compare values
         for (let key of keys1) {
@@ -208,7 +264,11 @@
 
 				// If all keys and values match, objects are equal
 				return true;
-			}
+			},
+      getEntityTypes(){
+        const world = useWorldStore();
+				return world.getEntityTypes;
+      }
     },
 	}
 </script>
@@ -324,6 +384,8 @@
   text-align: center;
   flex-wrap: wrap;
   word-break: break-all;
+  font-weight: bold;
+  font-size: 15px;
 
 	padding: 4px;
 }
@@ -349,6 +411,63 @@
   object-fit: contain;
 }
 
+::v-deep .multiselect {
+  height: 20px;
+}
+
+::v-deep .multiselect__tags {
+  height: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+::v-deep .multiselect__single {
+  padding-top: 2px;
+  font-size: 18px;
+}
+
+::v-deep .multiselect__input {
+  padding-top: 2px;
+  font-size: 100px;
+}
+
+.select-container {
+  font-family: Arial, sans-serif;
+  max-width: 300px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+select {
+  width: 25%;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-family: inherit;
+}
+
+select:focus {
+  outline: none;
+  background-color: #e0e0e0;
+}
+
+.selection-text {
+  font-style: italic;
+  color: #007bff;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: inherit;
+}
 
 </style>
 

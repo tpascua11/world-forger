@@ -2,8 +2,10 @@
 	<div class="main-container-start-col">
 		<div class="tab-collection">
 			<div @click="changeMainViewMode('ENTITY')" 					 class="tab border-x1"  :class="{ 'is-selected': showMainView === 'ENTITY'}" > Entity           </div>
-			<div @click="changeMainViewMode('WORLD')" 					 class="tab border-x1" 	:class="{ 'is-selected': showMainView === 'WORLD'}"> World            </div>
-			<div @click="changeMainViewMode('SHARED_ATTRIBUTE')" class="tab border-x1"  :class="{ 'is-selected': showMainView === 'SHARED_ATTRIBUTE'}"> Shared Attribute </div>
+      <div @click="changeMainViewMode('WORLD')" 					 class="tab border-x1" 	:class="{ 'is-selected': showMainView === 'WORLD'}"> World            </div>
+      <!--
+        <div @click="changeMainViewMode('SHARED_ATTRIBUTE')" class="tab border-x1"  :class="{ 'is-selected': showMainView === 'SHARED_ATTRIBUTE'}"> Shared Attribute </div>
+        -->
 		</div>
 
 		<!-- ENTITY VIEW -->
@@ -93,9 +95,10 @@
 			<WorldConfiguration @resetWorld="resetWorld"/>
 		</div>
 
+    <!-- TODO: Decided Not to do Shared Attribute no More-->
 		<div v-if="showMainView === 'SHARED_ATTRIBUTE'" class="bottom-row smile-x1">
 			<SharedAttributeConfiguration />
-		</div>
+    </div>
 
 	</div>
 </template>

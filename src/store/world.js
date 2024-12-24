@@ -27,19 +27,36 @@ export const useWorldStore = defineStore('world', {
         },
         Store: {
          templateInfo: {
-            name: { type: 'string', important: true },
+            'name': { type: 'string', important: true },
             'x-cord': { type: 'number' },
             'y-cord': { type: 'number' },
-            description: { type: 'string' },
+            'description': { type: 'string' },
+            'items': {
+              type: 'list_to_entity',
+              templateInfo: {
+                'cost': {type: 'number'},
+                'amount': {type: 'number'}
+              }
+            }
           },
-          templateOrder: [],
+          templateOrder: ['name', 'x-cord', 'y-cord', 'description', 'items'],
           rules: {},
           list: {
-            0: { name: 'Average Store', 'x-cord': 10, 'y-cord': 10, description: 'Basic store stuff' }
+            0: {
+              name: 'Average Store', 'x-cord': 10, 'y-cord': 10, description: 'Basic store stuff',
+              items: [
+                {
+                  entity_item: 1,
+                  cost: 1000,
+                  amount: 1000,
+                }
+              ]
+            }
           },
           description: '',
-        }
+        },
       },
+      /*
       'SharedAttribute': {
         0: {
           name: 'stats',
@@ -60,11 +77,11 @@ export const useWorldStore = defineStore('world', {
           order: ['strength', 'wisdom', 'consitution']
         },
       }
+      */
     },
     templateInfoType:  [
       'string', 'number', 'boolean', 'current_and_max',
-      'script_list', 'resource', 'table', 'table_list',
-      'image_url'
+      'script_list', 'image_url', 'list_to_entity', 'one_to_entity'
     ],
     entityItemIsEdited: {},
     entityItem: {},
@@ -113,6 +130,9 @@ export const useWorldStore = defineStore('world', {
         }
         else if(templateInfo[key].type === 'image_url'){
           newObject[key] = '';
+        }
+        else if(templateInfo[key].type === 'list_to_entity'){
+          newObject[key] = [];
         }
         else{
           newObject[key]= '';
@@ -299,7 +319,8 @@ export const useWorldStore = defineStore('world', {
       return state.world;
     },
     getEntityTypes: (state) => {
-			return Object.keys(state.world['Entity']);
+      state;
+      return Object.keys(state.world['Entity']);
     },
     getEntityData: (state) => (entityType) => {
       return state.world.Entity[entityType];
@@ -335,6 +356,13 @@ export const useWorldStore = defineStore('world', {
       return state.world.SharedAttribute;
     },
 
+    getSharedAttribute: (state) => (id) => {
+      if(!state.world.SharedAttribute) return false;
+      else if(!state.world.SharedAttribute[id]) return false;
+
+      return state.world.SharedAttribute[id];
+    },
+
     getEntityTemplate: (state) => {
       return state.entityTemplate;
     },
@@ -357,6 +385,9 @@ export const useWorldStore = defineStore('world', {
       }
 
       return replaceEntityItem;
+    },
+    getAttributeInfoType: (state) => {
+      return state.templateInfoType;
     },
     checkEntityTemplateInfoExist: (state) => (entityName, attribute) => {
       attribute; state;
